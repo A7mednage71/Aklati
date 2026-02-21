@@ -40,5 +40,6 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     // Lottie
-    implementation("com.airbnb.android:lottie:6.1.0")
+    implementation(libs.lottie.android)
+    implementation(libs.androidx.core.splashscreen)
 }
