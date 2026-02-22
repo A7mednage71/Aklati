@@ -11,8 +11,6 @@ public class SplashPresenter implements SplashContract.Presenter {
 
     @Override
     public void startTimer() {
-        // هنا قدام هنضيف شرط: لو User مسجل دخول يروح Home
-        // دلوقتي خليه يروح Login كبداية
-        new Handler().postDelayed(view::navigateToLogin, 3000); // 3 ثواني
+        new Handler().postDelayed(view::navigateToLogin, 2500);
     }
 }

@@ -1,5 +1,6 @@
 package com.example.aklati.presentation.splash_screen;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -7,6 +8,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.splashscreen.SplashScreen;
 
+import com.example.aklati.MainActivity;
 import com.example.aklati.R;
 
 public class SplashActivity extends AppCompatActivity implements SplashContract.View {
@@ -38,6 +40,9 @@ public class SplashActivity extends AppCompatActivity implements SplashContract.
 
     @Override
     public void navigateToLogin() {
+        Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();  // Close SplashActivity so it's removed from the back stack
     }
 
     @Override
