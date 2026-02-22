@@ -26,6 +26,15 @@
     <string name="home">Home</string>
     <string name="profile">Profile</string>
     <string name="browse_categories">Browse Categories</string>
+    <string name="removed_from_favorites">Removed from favorites</string>
+    <string name="undo">Undo</string>
+    <string name="no_favorites_yet">No Favorites Yet</string>
+    <string name="explore_meals">Explore Meals</string>
+    <string name="my_favorites">My Favorites ❤️</string>
+    <string name="favorites_subtitle">Your saved recipes in one place</string>
+    <string name="favorites_empty_desc">Start exploring meals and save your favorites here by tapping the ❤️ icon</string>
+    <string name="meal_image_desc">Meal image</string>
+    <string name="remove_from_favorites">Remove from favorites</string>
     <string name="tap_to_view_recipe">Tap to view recipe</string>
     <string name="spicy_chicken_pasta">Spicy Chicken Pasta</string>
     <string name="meal_of_the_day">Meal of the Day</string>
