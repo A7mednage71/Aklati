@@ -42,10 +42,11 @@ public class MainActivity extends AppCompatActivity {
         // Link BottomNav with NavController
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
 
-        // Hide BottomNav on login and register screens
+        // Hide BottomNav on login, register, and meal details screens
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             int id = destination.getId();
-            if (id == R.id.loginFragment || id == R.id.registerFragment) {
+            if (id == R.id.loginFragment || id == R.id.registerFragment
+                    || id == R.id.mealDetailsFragment) {
                 bottomNavigationView.setVisibility(View.GONE);
             } else {
                 bottomNavigationView.setVisibility(View.VISIBLE);

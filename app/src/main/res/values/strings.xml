@@ -23,6 +23,7 @@
     <string name="dont_have_account">Don\'t have an account?</string>
     <string name="sign_up">Sign Up</string>
     <string name="favorites">Favorites</string>
+    <string name="back">Back</string>
     <string name="home">Home</string>
     <string name="profile">Profile</string>
     <string name="browse_categories">Browse Categories</string>
@@ -45,4 +46,13 @@
     <string name="no_meals_in_category">There are no recipes in this category yet.</string>
     <string name="no_recipes_found">No recipes found</string>
     <string name="category_image_desc">Category image</string>
+    <!-- Meal Details -->
+    <string name="ingredients">🥗 Ingredients</string>
+    <string name="steps">📋 Steps</string>
+    <string name="watch_video">🎬 Watch Video</string>
+    <string name="add_to_favorites">Add to favorites</string>
+    <string name="no_instructions">No instructions available.</string>
+    <string name="ingredient_image_desc">Ingredient image</string>
+    <string name="origin_country_desc">Origin country</string>
+    <string name="area_cuisine_format">%1$s Cuisine</string>
 </resources>

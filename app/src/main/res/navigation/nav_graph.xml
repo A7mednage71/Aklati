@@ -50,7 +50,15 @@
         android:id="@+id/favoriteFragment"
         android:name="com.example.aklati.presentation.favorite.FavoriteFragment"
         android:label="Favorites"
-        tools:layout="@layout/fragment_favorite" />
+        tools:layout="@layout/fragment_favorite">
+        <action
+            android:id="@+id/action_favorite_to_mealDetails"
+            app:destination="@id/mealDetailsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
 
     <fragment
         android:id="@+id/categoryMealsFragment"
@@ -65,6 +73,19 @@
             android:name="categoryImageRes"
             android:defaultValue="0"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_categoryMeals_to_mealDetails"
+            app:destination="@id/mealDetailsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
+
+    <fragment
+        android:id="@+id/mealDetailsFragment"
+        android:name="com.example.aklati.presentation.meal_details.MealDetailsFragment"
+        android:label="Meal Details"
+        tools:layout="@layout/fragment_meal_details" />
 
 </navigation>

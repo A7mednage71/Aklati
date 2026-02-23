@@ -9,12 +9,14 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aklati.R;
 import com.example.aklati.data.models.Meal;
+import com.example.aklati.presentation.meal_details.MealDetailsFragment;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
@@ -114,7 +116,10 @@ public class FavoriteFragment extends Fragment implements FavoriteContract.View 
 
             @Override
             public void onMealClick(Meal meal) {
-                // TODO: navigate to meal details
+                Bundle args = new Bundle();
+                args.putSerializable(MealDetailsFragment.ARG_MEAL, meal);
+                NavHostFragment.findNavController(FavoriteFragment.this)
+                        .navigate(R.id.action_favorite_to_mealDetails, args);
             }
         });
         rvFavorites.setAdapter(adapter);
@@ -137,4 +142,3 @@ public class FavoriteFragment extends Fragment implements FavoriteContract.View 
         presenter.detachView();
     }
 }
-

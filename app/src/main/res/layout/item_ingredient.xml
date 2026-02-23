@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="12dp"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <!-- Ingredient image card -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        app:cardBackgroundColor="#FFF8F0"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="0dp"
+        app:strokeColor="#FFE0B2"
+        app:strokeWidth="1dp">
+
+        <ImageView
+            android:id="@+id/ivIngredientImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/meal_image_desc"
+            android:padding="10dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/aklati_logo"
+            tools:src="@tools:sample/avatars" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Ingredient name -->
+    <TextView
+        android:id="@+id/tvIngredientName"
+        android:layout_width="72dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:ellipsize="end"
+        android:fontFamily="@font/poppins_bold"
+        android:gravity="center"
+        android:maxLines="1"
+        android:textColor="#212121"
+        android:textSize="11sp"
+        tools:text="Soy Sauce" />
+
+    <!-- Measure -->
+    <TextView
+        android:id="@+id/tvIngredientMeasure"
+        android:layout_width="72dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:ellipsize="end"
+        android:fontFamily="@font/poppins_regular"
+        android:gravity="center"
+        android:maxLines="1"
+        android:textColor="#FF5722"
+        android:textSize="11sp"
+        tools:text="3/4 cup" />
+
+</LinearLayout>
+
+

@@ -101,7 +101,10 @@ public class CategoryMealsFragment extends Fragment implements CategoryMealsCont
         tvMealsCount.setText(countText);
 
         MealGridAdapter adapter = new MealGridAdapter(meals, meal -> {
-            // TODO: navigate to meal details
+            Bundle args = new Bundle();
+            args.putSerializable("meal", meal);
+            Navigation.findNavController(requireView())
+                    .navigate(R.id.action_categoryMeals_to_mealDetails, args);
         });
         rvMealsGrid.setAdapter(adapter);
     }
