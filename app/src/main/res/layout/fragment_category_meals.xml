@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FAFAFA"
+    tools:context=".presentation.category_meals.CategoryMealsFragment"
+    tools:ignore="HardcodedText">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Header -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="0dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/gradient_header_bg"
+                    android:orientation="vertical"
+                    android:paddingStart="20dp"
+                    android:paddingTop="40dp"
+                    android:paddingEnd="20dp"
+                    android:paddingBottom="24dp">
+
+                    <!-- Back Button + Title Row -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnBack"
+                            style="@style/Widget.Material3.Button.Icon"
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:insetLeft="0dp"
+                            android:insetTop="0dp"
+                            android:insetRight="0dp"
+                            android:insetBottom="0dp"
+                            android:padding="0dp"
+                            android:text=""
+                            app:backgroundTint="#33FFFFFF"
+                            app:icon="@drawable/ic_arrow_back"
+                            app:iconGravity="textStart"
+                            app:iconPadding="0dp"
+                            app:iconSize="24dp"
+                            app:iconTint="@color/white"
+                            app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+                            app:strokeColor="#55FFFFFF"
+                            app:strokeWidth="1dp" />
+
+                        <TextView
+                            android:id="@+id/tvCategoryTitle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="14dp"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/poppins_bold"
+                            android:text="@string/category_meals_title"
+                            android:textColor="@color/white"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            tools:text="Seafood" />
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            app:cardCornerRadius="24dp"
+                            app:cardElevation="4dp"
+                            app:strokeColor="#33FFFFFF"
+                            app:strokeWidth="1dp">
+
+                            <ImageView
+                                android:id="@+id/ivCategoryHeaderImage"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="#FFF3E0"
+                                android:contentDescription="@string/category_image_desc"
+                                android:padding="8dp"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/aklati_logo" />
+                        </com.google.android.material.card.MaterialCardView>
+
+                    </LinearLayout>
+
+                    <!-- Subtitle -->
+                    <TextView
+                        android:id="@+id/tvMealsCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:alpha="0.85"
+                        android:fontFamily="@font/poppins_regular"
+                        android:text="@string/explore_recipes"
+                        android:textColor="#E8F5E9"
+                        android:textSize="14sp"
+                        tools:text="8 recipes found" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Meals Grid -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- Loading -->
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="40dp"
+                    android:visibility="gone" />
+
+                <!-- Empty State -->
+                <LinearLayout
+                    android:id="@+id/emptyStateLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingTop="60dp"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:alpha="0.4"
+                        android:contentDescription="@string/no_meals_found"
+                        android:src="@drawable/ic_empty_favorites" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:fontFamily="@font/poppins_bold"
+                        android:text="@string/no_meals_found"
+                        android:textColor="#BDBDBD"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:fontFamily="@font/poppins_regular"
+                        android:gravity="center"
+                        android:text="@string/no_meals_in_category"
+                        android:textColor="#BDBDBD"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <!-- Meals RecyclerView (Grid) -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvMealsGrid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    app:spanCount="2"
+                    tools:listitem="@layout/item_meal_grid" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</FrameLayout>
+
+
+
+
+
+

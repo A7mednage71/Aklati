@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -75,7 +76,14 @@ public class homeFragment extends Fragment implements HomeContract.View {
 
     @Override
     public void showCategories(List<Category> categories) {
-        rvCategories.setAdapter(new CategoryAdapter(categories));
+        CategoryAdapter adapter = new CategoryAdapter(categories, category -> {
+            Bundle args = new Bundle();
+            args.putString("categoryName", category.getName());
+            args.putInt("categoryImageRes", category.getDrawableResId());
+            Navigation.findNavController(requireView())
+                    .navigate(R.id.action_home_to_categoryMeals, args);
+        });
+        rvCategories.setAdapter(adapter);
     }
 
     @Override

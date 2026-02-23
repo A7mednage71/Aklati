@@ -39,4 +39,10 @@
     <string name="spicy_chicken_pasta">Spicy Chicken Pasta</string>
     <string name="meal_of_the_day">Meal of the Day</string>
     <string name="popular">🔥 Popular</string>
+    <string name="category_meals_title">Category Meals</string>
+    <string name="explore_recipes">Explore delicious recipes</string>
+    <string name="no_meals_found">No meals found</string>
+    <string name="no_meals_in_category">There are no recipes in this category yet.</string>
+    <string name="no_recipes_found">No recipes found</string>
+    <string name="category_image_desc">Category image</string>
 </resources>
