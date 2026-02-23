@@ -9,10 +9,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.example.aklati.R;
-import com.example.aklati.presentation.home.homeFragment;
-import com.example.aklati.presentation.register.RegisterFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -44,7 +43,8 @@ public class LoginFragment extends Fragment implements LoginContract.View {
             presenter.login(email, password);
         });
 
-        view.findViewById(R.id.tvRegisterLink).setOnClickListener(v -> requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new RegisterFragment()).addToBackStack(null).commit());
+        view.findViewById(R.id.tvRegisterLink).setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_login_to_register));
     }
 
     @Override
@@ -58,8 +58,6 @@ public class LoginFragment extends Fragment implements LoginContract.View {
     @Override
     public void onLoginSuccess() {
         Toast.makeText(requireContext(), "Login successful..!", Toast.LENGTH_SHORT).show();
-        // Navigate to home or main screen after successful login
-
     }
 
     @Override
@@ -69,10 +67,7 @@ public class LoginFragment extends Fragment implements LoginContract.View {
 
     @Override
     public void navigateToHome() {
-        getParentFragmentManager().beginTransaction()
-                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                .replace(R.id.fragment_container, new homeFragment())
-                .commit();
+        Navigation.findNavController(requireView()).navigate(R.id.action_login_to_home);
     }
 
     @Override
@@ -81,4 +76,3 @@ public class LoginFragment extends Fragment implements LoginContract.View {
         etPassword.setText("");
     }
 }
-

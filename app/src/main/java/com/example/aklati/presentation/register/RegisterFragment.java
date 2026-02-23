@@ -9,9 +9,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.example.aklati.R;
-import com.example.aklati.presentation.login.LoginFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -87,11 +87,6 @@ public class RegisterFragment extends Fragment implements RegisterContract.View 
 
     @Override
     public void navigateToLogin() {
-        requireActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new LoginFragment())
-                .addToBackStack(null)
-                .commit();
+        Navigation.findNavController(requireView()).navigate(R.id.action_register_to_login);
     }
 }
-
-
