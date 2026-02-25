@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +23,7 @@ import java.util.List;
 public class homeFragment extends Fragment implements HomeContract.View {
 
     private RecyclerView rvCategories;
+    private EditText etSearch;
 
     public homeFragment() {
     }
@@ -40,11 +42,13 @@ public class homeFragment extends Fragment implements HomeContract.View {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         rvCategories = view.findViewById(R.id.rvCategories);
+        etSearch = view.findViewById(R.id.etSearch);
         rvCategories.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         rvCategories.setNestedScrollingEnabled(false);
+
+        etSearch.setOnClickListener(v -> navigateToSearch());
 
         showCategories(getDummyCategories());
     }
@@ -92,5 +96,10 @@ public class homeFragment extends Fragment implements HomeContract.View {
 
     @Override
     public void navigateToDetails(Meal meal) {
+    }
+
+    @Override
+    public void navigateToSearch() {
+        Navigation.findNavController(requireView()).navigate(R.id.searchFragment);
     }
 }

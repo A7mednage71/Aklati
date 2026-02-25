@@ -20,6 +20,8 @@ public interface HomeContract {
         void showErrorMessage(String error);
 
         void navigateToDetails(Meal meal);
+
+        void navigateToSearch();
     }
 
     interface Presenter {

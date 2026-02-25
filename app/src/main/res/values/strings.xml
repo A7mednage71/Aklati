@@ -55,4 +55,14 @@
     <string name="ingredient_image_desc">Ingredient image</string>
     <string name="origin_country_desc">Origin country</string>
     <string name="area_cuisine_format">%1$s Cuisine</string>
+    <!-- Search -->
+    <string name="search">Search</string>
+    <string name="search_title">Search Meals 🔍</string>
+    <string name="search_subtitle">Find recipes by name, category or cuisine</string>
+    <string name="search_hint">e.g. Chicken, Italian, Pasta…</string>
+    <string name="search_initial_title">What are you craving?</string>
+    <string name="search_initial_desc">Type a meal name, category or cuisine above</string>
+    <string name="search_no_results">No Results Found</string>
+    <string name="search_no_results_for">No results for \"%1$s\"</string>
+    <string name="search_clear">Clear search</string>
 </resources>
