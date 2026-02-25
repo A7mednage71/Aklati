@@ -65,4 +65,21 @@
     <string name="search_no_results">No Results Found</string>
     <string name="search_no_results_for">No results for \"%1$s\"</string>
     <string name="search_clear">Clear search</string>
+    <!-- Profile -->
+    <string name="profile_info_title">Account Info</string>
+    <string name="profile_header_subtitle">Manage your account details</string>
+    <string name="logout">Logout</string>
+    <string name="cancel">Cancel</string>
+    <string name="logout_confirm_title">Logout</string>
+    <string name="logout_confirm_message">Are you sure you want to logout?</string>
+    <!-- Home stats -->
+    <string name="welcome_greeting">Hi, Ahmed! 👋</string>
+    <string name="welcome_cook_question">What do you want to cook today?</string>
+    <string name="stats_categories_count">8</string>
+    <string name="stats_categories_label">Categories</string>
+    <string name="stats_recipes_count">30+</string>
+    <string name="stats_recipes_label">Recipes</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="push_notifications">Push Notifications</string>
+    <string name="your_activity">Your Activity</string>
 </resources>

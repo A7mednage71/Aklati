@@ -7,4 +7,8 @@
     <color name="nav_inactive">#BDBDBD</color>
     <color name="nav_background">#FFFFFF</color>
     <color name="nav_indicator">#FBE9E7</color>
+    <color name="orange_main">#FF5722</color>
+    <color name="orange_light">#FFCCBC</color>
+    <color name="grey_track">#BDBDBD</color>
+    <color name="grey_thumb">#F5F5F5</color>
 </resources>
