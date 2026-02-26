@@ -128,6 +128,7 @@ public class MealDetails implements Serializable {
         return thumbnail;
     }
 
+
     // Helper method to access raw fields by index for the Mapper
     public String getIngredient(int index) {
         switch (index) {
@@ -247,7 +248,7 @@ public class MealDetails implements Serializable {
             return null;
         }
         String trimmed = value.trim();
-        
+
         // Return null if empty or just whitespace
         if (trimmed.isEmpty()) {
             return null;

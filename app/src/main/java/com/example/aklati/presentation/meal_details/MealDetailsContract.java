@@ -14,6 +14,8 @@ public interface MealDetailsContract {
         void updateFavoriteIcon(boolean isFavorite);
 
         void showErrorMessage(String error);
+
+        void showMessage(String message);
     }
 
     interface Presenter {

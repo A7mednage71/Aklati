@@ -1,6 +1,6 @@
 package com.example.aklati.presentation.favorite;
 
-import com.example.aklati.data.models.MealDetails;
+import com.example.aklati.data.local.entity.FavoriteMeal;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ public interface FavoriteContract {
 
         void hideLoading();
 
-        void showFavorites(List<MealDetails> mealDetails);
+        void showFavorites(List<FavoriteMeal> favoriteMeals);
 
         void showEmptyState();
 
@@ -21,7 +21,7 @@ public interface FavoriteContract {
     interface Presenter {
         void getFavorites();
 
-        void removeFavorite(MealDetails mealDetails);
+        void removeFavorite(String mealId);
 
         void detachView();
     }

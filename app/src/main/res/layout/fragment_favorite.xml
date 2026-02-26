@@ -68,6 +68,40 @@
                 android:paddingBottom="90dp"
                 tools:listitem="@layout/item_favorite_meal" />
 
+            <!-- Shimmer Loading -->
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmerLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                app:shimmer_auto_start="true"
+                app:shimmer_base_alpha="0.7"
+                app:shimmer_direction="left_to_right"
+                app:shimmer_duration="1500"
+                app:shimmer_repeat_count="100"
+                app:shimmer_repeat_delay="0"
+                app:shimmer_shape="linear"
+                app:shimmer_tilt="0">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingTop="12dp">
+
+                    <include layout="@layout/shimmer_favorite_item" />
+
+                    <include layout="@layout/shimmer_favorite_item" />
+
+                    <include layout="@layout/shimmer_favorite_item" />
+
+                    <include layout="@layout/shimmer_favorite_item" />
+
+                    <include layout="@layout/shimmer_favorite_item" />
+
+                </LinearLayout>
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
             <!-- Empty State -->
             <LinearLayout
                 android:id="@+id/layoutEmptyState"

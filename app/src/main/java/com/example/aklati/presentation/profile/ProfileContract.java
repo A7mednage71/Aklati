@@ -13,6 +13,8 @@ public interface ProfileContract {
     interface Presenter {
         void loadProfile();
 
+        void loadFavoritesCount();
+
         void logout();
 
         void detachView();

@@ -17,6 +17,7 @@ import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,9 +28,13 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.bumptech.glide.Glide;
 import com.example.aklati.R;
+import com.example.aklati.data.local.db.AppDatabase;
+import com.example.aklati.data.local.prefs.SharedPrefsHelper;
 import com.example.aklati.data.models.MealDetails;
 import com.example.aklati.data.remote.network.RetrofitClient;
+import com.example.aklati.data.repository.FavoriteRepository;
 import com.example.aklati.data.repository.MealRepository;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -41,7 +46,7 @@ public class MealDetailsFragment extends Fragment implements MealDetailsContract
     public static final String ARG_MEAL_ID = "mealId";
     private static final String TAG = "MealDetailsFragment";
     private View scrollContent;
-    private View layoutLoading;
+    private ShimmerFrameLayout layoutLoading;
     private ImageView ivMealDetailImage;
     private TextView tvDetailMealName;
     private TextView tvDetailArea;
@@ -127,9 +132,20 @@ public class MealDetailsFragment extends Fragment implements MealDetailsContract
             }
         });
 
-        MealRepository repo = new MealRepository(RetrofitClient.getService());
-        // Presenter
-        presenter = new MealDetailsPresenter(this, repo);
+        // Create repositories
+        MealRepository mealRepo = new MealRepository(RetrofitClient.getService());
+        AppDatabase database = AppDatabase.getInstance(requireContext());
+
+        // Get current user ID
+        SharedPrefsHelper prefsHelper = SharedPrefsHelper.getInstance(requireContext());
+        String userId = prefsHelper.getCurrentUserId();
+
+        Log.d(TAG, "User ID from SharedPrefs: " + userId);
+
+        FavoriteRepository favoriteRepo = new FavoriteRepository(database.favoriteMealDao(), userId);
+
+        // Create Presenter with both repositories
+        presenter = new MealDetailsPresenter(this, mealRepo, favoriteRepo);
 
         // Load meal details
         if (mealId != null && !mealId.isEmpty()) {
@@ -150,6 +166,7 @@ public class MealDetailsFragment extends Fragment implements MealDetailsContract
         }
         if (layoutLoading != null) {
             layoutLoading.setVisibility(View.VISIBLE);
+            layoutLoading.startShimmer();
         }
         if (scrollContent != null) {
             scrollContent.setVisibility(View.GONE);
@@ -159,6 +176,7 @@ public class MealDetailsFragment extends Fragment implements MealDetailsContract
     @Override
     public void hideLoading() {
         if (layoutLoading != null) {
+            layoutLoading.stopShimmer();
             layoutLoading.setVisibility(View.GONE);
         }
         if (scrollContent != null) {
@@ -257,7 +275,12 @@ public class MealDetailsFragment extends Fragment implements MealDetailsContract
         tvErrorTitle.setText(R.string.something_went_wrong);
     }
 
-    // ── Helpers ──────────────────────────────────────────────────────────────
+    @Override
+    public void showMessage(String message) {
+        if (getView() != null) {
+            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+        }
+    }
 
     @SuppressLint("SetJavaScriptEnabled")
     private void setupWebView() {

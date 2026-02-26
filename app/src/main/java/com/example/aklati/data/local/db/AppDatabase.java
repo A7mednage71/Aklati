@@ -6,10 +6,12 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import com.example.aklati.data.local.dao.FavoriteMealDao;
 import com.example.aklati.data.local.dao.UserDao;
+import com.example.aklati.data.local.entity.FavoriteMeal;
 import com.example.aklati.data.local.entity.User;
 
-@Database(entities = {User.class}, version = 1, exportSchema = false)
+@Database(entities = {User.class, FavoriteMeal.class}, version = 3, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
     private static final String DB_NAME = "aklati_db";
     private static volatile AppDatabase instance;
@@ -25,4 +27,6 @@ public abstract class AppDatabase extends RoomDatabase {
     }
 
     public abstract UserDao userDao();
+
+    public abstract FavoriteMealDao favoriteMealDao();
 }

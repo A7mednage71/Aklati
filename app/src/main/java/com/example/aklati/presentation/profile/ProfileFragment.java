@@ -12,6 +12,9 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.example.aklati.R;
+import com.example.aklati.data.local.db.AppDatabase;
+import com.example.aklati.data.local.prefs.SharedPrefsHelper;
+import com.example.aklati.data.repository.FavoriteRepository;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 public class ProfileFragment extends Fragment implements ProfileContract.View {
@@ -44,7 +47,16 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
         tvFavoritesCount = view.findViewById(R.id.tvFavoritesCount);
         btnLogout = view.findViewById(R.id.btnLogout);
 
-        presenter = new ProfilePresenter(this);
+        // Get SharedPrefs and userId
+        SharedPrefsHelper helper = SharedPrefsHelper.getInstance(requireContext());
+        String userId = helper.getCurrentUserId();
+
+        // Create FavoriteRepository
+        AppDatabase database = AppDatabase.getInstance(requireContext());
+        FavoriteRepository favoriteRepository = new FavoriteRepository(database.favoriteMealDao(), userId);
+
+        // Create presenter with both dependencies
+        presenter = new ProfilePresenter(this, helper, favoriteRepository);
         presenter.loadProfile();
 
         btnLogout.setOnClickListener(v -> showLogoutDialog());
@@ -70,6 +82,7 @@ public class ProfileFragment extends Fragment implements ProfileContract.View {
     @Override
     public void navigateToLogin() {
         Navigation.findNavController(requireView()).navigate(R.id.action_profile_to_login);
+        SharedPrefsHelper.getInstance(requireContext()).setLoggedIn(false);
     }
 
     @Override
