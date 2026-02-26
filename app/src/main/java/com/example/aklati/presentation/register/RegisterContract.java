@@ -18,6 +18,8 @@ public interface RegisterContract {
 
     interface Presenter {
         void register(String name, String email, String password, String confirmPassword);
+
+        void dispose();
     }
 }
 

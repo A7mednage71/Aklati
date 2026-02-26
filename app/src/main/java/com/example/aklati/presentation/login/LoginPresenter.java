@@ -1,27 +1,54 @@
 package com.example.aklati.presentation.login;
 
+import com.example.aklati.data.local.prefs.SharedPrefsHelper;
+import com.example.aklati.data.repository.UserRepository;
+import com.example.aklati.utils.ValidationHelper;
+
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
 public class LoginPresenter implements LoginContract.Presenter {
     private final LoginContract.View view;
+    private final UserRepository repository;
+    private final SharedPrefsHelper sharedPrefsHelper;
+    private final CompositeDisposable disposable = new CompositeDisposable();
 
-    public LoginPresenter(LoginContract.View view) {
+    public LoginPresenter(LoginContract.View view, UserRepository repository, SharedPrefsHelper sharedPrefsHelper) {
         this.view = view;
+        this.repository = repository;
+        this.sharedPrefsHelper = sharedPrefsHelper;
     }
 
     @Override
     public void login(String email, String password) {
-        if (email == null || email.trim().isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            view.onLoginError("Invalid email address..!");
-            return;
-        }
-        if (password == null || password.length() < 6) {
-            view.onLoginError("Password must be at least 6 characters..!");
+        ValidationHelper.ValidationResult result = ValidationHelper.validateLogin(email, password);
+        if (!result.isValid) {
+            view.onLoginError(result.message);
             return;
         }
 
         view.showLoading();
-        // TODO: Call API/Repository
-        view.hideLoading();
-        view.onLoginSuccess();
-        view.navigateToHome();
+        disposable.add(repository.loginUser(email.trim(), password.trim())
+                .subscribeOn(Schedulers.io())
+                .delay(2, TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(user -> {
+                    view.hideLoading();
+                    view.onLoginSuccess(user);
+                    sharedPrefsHelper.setLoggedIn(true);
+                    sharedPrefsHelper.saveUserData(user.getName(), user.getEmail());
+                    view.navigateToHome();
+                }, throwable -> {
+                    view.hideLoading();
+                    view.onLoginError("Login failed: " + throwable.getMessage());
+                }));
+    }
+
+    @Override
+    public void dispose() {
+        disposable.clear();
     }
 }

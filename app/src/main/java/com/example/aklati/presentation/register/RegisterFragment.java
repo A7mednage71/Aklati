@@ -12,16 +12,16 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.example.aklati.R;
+import com.example.aklati.data.local.db.AppDatabase;
+import com.example.aklati.presentation.common.LoadingDialog;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class RegisterFragment extends Fragment implements RegisterContract.View {
 
     private RegisterContract.Presenter presenter;
-
     private TextInputEditText etName, etEmail, etPassword, etConfirmPassword;
-    private MaterialButton btnRegister;
-    private View progressBar;
+    private LoadingDialog loadingDialog;
 
     @Nullable
     @Override
@@ -33,21 +33,20 @@ public class RegisterFragment extends Fragment implements RegisterContract.View 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        presenter = new RegisterPresenter(this);
+        presenter = new RegisterPresenter(this, AppDatabase.getInstance(requireContext()).userDao());
+        loadingDialog = new LoadingDialog(requireContext());
 
         etName = view.findViewById(R.id.etName);
         etEmail = view.findViewById(R.id.etEmail);
         etPassword = view.findViewById(R.id.etPassword);
         etConfirmPassword = view.findViewById(R.id.etConfirmPassword);
-        btnRegister = view.findViewById(R.id.btnRegister);
-        progressBar = view.findViewById(R.id.progressBar);
+        MaterialButton btnRegister = view.findViewById(R.id.btnRegister);
 
         btnRegister.setOnClickListener(v -> {
             String name = etName.getText() != null ? etName.getText().toString().trim() : "";
             String email = etEmail.getText() != null ? etEmail.getText().toString().trim() : "";
             String password = etPassword.getText() != null ? etPassword.getText().toString().trim() : "";
             String confirmPassword = etConfirmPassword.getText() != null ? etConfirmPassword.getText().toString().trim() : "";
-
             presenter.register(name, email, password, confirmPassword);
         });
 
@@ -56,14 +55,12 @@ public class RegisterFragment extends Fragment implements RegisterContract.View 
 
     @Override
     public void showLoading() {
-        progressBar.setVisibility(View.VISIBLE);
-        btnRegister.setEnabled(false);
+        loadingDialog.show();
     }
 
     @Override
     public void hideLoading() {
-        progressBar.setVisibility(View.GONE);
-        btnRegister.setEnabled(true);
+        loadingDialog.dismiss();
     }
 
     @Override
@@ -88,5 +85,12 @@ public class RegisterFragment extends Fragment implements RegisterContract.View 
     @Override
     public void navigateToLogin() {
         Navigation.findNavController(requireView()).navigate(R.id.action_register_to_login);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (presenter != null) presenter.dispose();
+        if (loadingDialog != null) loadingDialog.dismiss();
     }
 }

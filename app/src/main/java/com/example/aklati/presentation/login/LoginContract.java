@@ -1,12 +1,14 @@
 package com.example.aklati.presentation.login;
 
+import com.example.aklati.data.local.entity.User;
+
 public interface LoginContract {
     interface View {
         void showLoading();
 
         void hideLoading();
 
-        void onLoginSuccess();
+        void onLoginSuccess(User user);
 
         void onLoginError(String message);
 
@@ -17,5 +19,8 @@ public interface LoginContract {
 
     interface Presenter {
         void login(String email, String password);
+
+        // to clear any resources or references to the view to prevent memory leaks
+        void dispose();
     }
 }

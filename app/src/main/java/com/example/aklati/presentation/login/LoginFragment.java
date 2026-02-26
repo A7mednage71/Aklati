@@ -12,6 +12,11 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.example.aklati.R;
+import com.example.aklati.data.local.db.AppDatabase;
+import com.example.aklati.data.local.entity.User;
+import com.example.aklati.data.local.prefs.SharedPrefsHelper;
+import com.example.aklati.data.repository.UserRepository;
+import com.example.aklati.presentation.common.LoadingDialog;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -19,7 +24,7 @@ public class LoginFragment extends Fragment implements LoginContract.View {
 
     private LoginContract.Presenter presenter;
     private TextInputEditText etEmail, etPassword;
-    private MaterialButton btnLogin;
+    private LoadingDialog loadingDialog;
 
     @Nullable
     @Override
@@ -31,11 +36,15 @@ public class LoginFragment extends Fragment implements LoginContract.View {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        presenter = new LoginPresenter(this);
+        SharedPrefsHelper helper = SharedPrefsHelper.getInstance(requireContext());
+        UserRepository repo = new UserRepository(AppDatabase.getInstance(requireContext()).userDao());
+
+        presenter = new LoginPresenter(this, repo, helper);
+        loadingDialog = new LoadingDialog(requireContext());
 
         etEmail = view.findViewById(R.id.etEmail);
         etPassword = view.findViewById(R.id.etPassword);
-        btnLogin = view.findViewById(R.id.btnLogin);
+        MaterialButton btnLogin = view.findViewById(R.id.btnLogin);
 
         btnLogin.setOnClickListener(v -> {
             String email = etEmail.getText() != null ? etEmail.getText().toString().trim() : "";
@@ -49,14 +58,16 @@ public class LoginFragment extends Fragment implements LoginContract.View {
 
     @Override
     public void showLoading() {
+        loadingDialog.show();
     }
 
     @Override
     public void hideLoading() {
+        loadingDialog.dismiss();
     }
 
     @Override
-    public void onLoginSuccess() {
+    public void onLoginSuccess(User user) {
         Toast.makeText(requireContext(), "Login successful..!", Toast.LENGTH_SHORT).show();
     }
 
@@ -74,5 +85,12 @@ public class LoginFragment extends Fragment implements LoginContract.View {
     public void clearInputs() {
         etEmail.setText("");
         etPassword.setText("");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (presenter != null) presenter.dispose();
+        if (loadingDialog != null) loadingDialog.dismiss();
     }
 }

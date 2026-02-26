@@ -8,7 +8,7 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.aklati"
+        applicationId = "com.negeh_tech.aklati"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
@@ -44,6 +44,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.fragment)
+    implementation(libs.androidx.room.common.jvm)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -56,9 +57,18 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
     implementation(libs.okhttp.logging)
+    implementation(libs.retrofit.adapter.rxjava3)
     // Glide
     implementation(libs.glide)
     // Navigation Component
     implementation(libs.androidx.navigation.fragment)
     implementation(libs.androidx.navigation.ui)
+    // Room
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.rxjava3)
+    annotationProcessor(libs.androidx.room.compiler)
+    // rx java
+    implementation(libs.rxjava)
+    implementation(libs.rxandroid)
+    annotationProcessor(libs.kotlinx.metadata.jvm)
 }

@@ -10,6 +10,6 @@ public interface SplashContract {
 
     interface Presenter {
         // Splash logic
-        void startTimer();
+        void checkLoginStatus();
     }
 }
