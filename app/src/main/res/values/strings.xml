@@ -83,4 +83,6 @@
     <string name="dark_mode">Dark Mode</string>
     <string name="push_notifications">Push Notifications</string>
     <string name="your_activity">Your Activity</string>
+    <string name="something_went_wrong">Oops! Something went wrong, Please try again later</string>
+
 </resources>

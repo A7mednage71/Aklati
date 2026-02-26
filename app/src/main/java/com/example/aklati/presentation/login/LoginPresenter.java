@@ -36,10 +36,10 @@ public class LoginPresenter implements LoginContract.Presenter {
                 .delay(2, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(user -> {
-                    view.hideLoading();
-                    view.onLoginSuccess(user);
                     sharedPrefsHelper.setLoggedIn(true);
                     sharedPrefsHelper.saveUserData(user.getName(), user.getEmail());
+                    view.hideLoading();
+                    view.onLoginSuccess(user);
                     view.navigateToHome();
                 }, throwable -> {
                     view.hideLoading();

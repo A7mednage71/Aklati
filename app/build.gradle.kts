@@ -71,4 +71,6 @@ dependencies {
     implementation(libs.rxjava)
     implementation(libs.rxandroid)
     annotationProcessor(libs.kotlinx.metadata.jvm)
+    // Shimmer
+    implementation(libs.shimmer)
 }

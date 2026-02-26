@@ -17,17 +17,21 @@ public interface HomeContract {
 
         void showCategories(List<Category> categories);
 
-        void showErrorMessage(String error);
+        void showUserName(String name);
 
         void navigateToDetails(Meal meal);
 
         void navigateToSearch();
+
+        void showError(String error);
     }
 
     interface Presenter {
         void getRandomMeal();
 
         void getCategories();
+
+        void getUserName();
 
         void searchMeals(String query);
 

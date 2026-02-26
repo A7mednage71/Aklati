@@ -4,7 +4,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,17 +16,36 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.aklati.R;
+import com.example.aklati.data.local.prefs.SharedPrefsHelper;
 import com.example.aklati.data.models.Category;
 import com.example.aklati.data.models.Meal;
+import com.example.aklati.data.remote.network.RetrofitClient;
+import com.example.aklati.data.repository.MealRepository;
+import com.facebook.shimmer.Shimmer;
+import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.material.card.MaterialCardView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class homeFragment extends Fragment implements HomeContract.View {
-
+    private HomeContract.Presenter presenter;
     private RecyclerView rvCategories;
     private EditText etSearch;
+    private ImageView ivRandomMeal;
+    private TextView tvRandomMealName;
+    private MaterialCardView cardRandomMeal;
+    private Meal currentRandomMeal;
+    // Loading state views
+    private ShimmerFrameLayout shimmerLayout;
+    private View contentScrollView;
+    // Error handling views
+    private View layoutError;
+    private TextView tvError;
+    private Button btnRetry;
+    // User data views
+    private TextView tvUserName;
 
     public homeFragment() {
     }
@@ -42,40 +64,71 @@ public class homeFragment extends Fragment implements HomeContract.View {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        tvUserName = view.findViewById(R.id.tvWelcomeGreeting);
         rvCategories = view.findViewById(R.id.rvCategories);
         etSearch = view.findViewById(R.id.etSearch);
+        ivRandomMeal = view.findViewById(R.id.ivRandomMeal);
+        tvRandomMealName = view.findViewById(R.id.tvRandomMealName);
+        cardRandomMeal = view.findViewById(R.id.cardRandomMeal);
+        shimmerLayout = view.findViewById(R.id.shimmerLayout);
+        contentScrollView = view.findViewById(R.id.contentScrollView);
+        layoutError = view.findViewById(R.id.layoutError);
+        tvError = view.findViewById(R.id.tvError);
+        btnRetry = view.findViewById(R.id.btnRetry);
+
         rvCategories.setLayoutManager(
                 new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         rvCategories.setNestedScrollingEnabled(false);
 
         etSearch.setOnClickListener(v -> navigateToSearch());
 
-        showCategories(getDummyCategories());
-    }
+        cardRandomMeal.setOnClickListener(v -> {
+            if (currentRandomMeal != null) navigateToDetails(currentRandomMeal);
+        });
 
-    private List<Category> getDummyCategories() {
-        List<Category> list = new ArrayList<>();
-        list.add(new Category("Beef", R.drawable.aklati_logo));
-        list.add(new Category("Chicken", R.drawable.aklati_logo));
-        list.add(new Category("Dessert", R.drawable.aklati_logo));
-        list.add(new Category("Lamb", R.drawable.aklati_logo));
-        list.add(new Category("Pasta", R.drawable.aklati_logo));
-        list.add(new Category("Seafood", R.drawable.aklati_logo));
-        list.add(new Category("Vegan", R.drawable.aklati_logo));
-        list.add(new Category("Vegetarian", R.drawable.aklati_logo));
-        return list;
+        btnRetry.setOnClickListener(v -> {
+            layoutError.setVisibility(View.GONE);
+            presenter.getRandomMeal();
+            presenter.getCategories();
+        });
+
+        MealRepository repo = new MealRepository(RetrofitClient.getService());
+        presenter = new HomePresenter(this, repo, SharedPrefsHelper.getInstance(requireContext()));
+        presenter.getUserName();
+        presenter.getRandomMeal();
+        presenter.getCategories();
     }
 
     @Override
     public void showLoading() {
+        Shimmer shimmer = new Shimmer.AlphaHighlightBuilder()
+                .setDuration(1200)
+                .setBaseAlpha(0.7f)
+                .setHighlightAlpha(1.0f)
+                .setWidthRatio(1.5f)
+                .build();
+        shimmerLayout.setShimmer(shimmer);
+        shimmerLayout.setVisibility(View.VISIBLE);
+        shimmerLayout.startShimmer();
+        contentScrollView.setVisibility(View.GONE);
     }
 
     @Override
     public void hideLoading() {
+        shimmerLayout.stopShimmer();
+        shimmerLayout.setVisibility(View.GONE);
+        contentScrollView.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void showRandomMeal(Meal meal) {
+        currentRandomMeal = meal;
+        tvRandomMealName.setText(meal.getName());
+        Glide.with(this)
+                .load(meal.getImage())
+                .placeholder(R.drawable.aklati_logo)
+                .centerCrop()
+                .into(ivRandomMeal);
     }
 
     @Override
@@ -91,15 +144,33 @@ public class homeFragment extends Fragment implements HomeContract.View {
     }
 
     @Override
-    public void showErrorMessage(String error) {
+    public void showUserName(String name) {
+        if (name != null && !name.isEmpty()) {
+            tvUserName.setText("Hi, " + name.split(" ")[0] + "!");
+        } else {
+            tvUserName.setText("Hi, Foodie!");
+        }
+    }
+
+    @Override
+    public void showError(String error) {
+        shimmerLayout.stopShimmer();
+        shimmerLayout.setVisibility(View.GONE);
+        contentScrollView.setVisibility(View.GONE);
+        layoutError.setVisibility(View.VISIBLE);
+        tvError.setText(R.string.something_went_wrong);
     }
 
     @Override
     public void navigateToDetails(Meal meal) {
+        Bundle args = new Bundle();
+        args.putString("mealId", meal.getId());
+        Navigation.findNavController(requireView()).navigate(R.id.mealDetailsFragment, args);
     }
 
     @Override
     public void navigateToSearch() {
         Navigation.findNavController(requireView()).navigate(R.id.searchFragment);
     }
+
 }

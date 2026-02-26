@@ -4,11 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 public class SharedPrefsHelper {
-    private static final String PREF_NAME = "AklatiPrefs";
-    private static final String KEY_IS_LOGGED_IN = "isLoggedIn";
-    private static final String KEY_USER_EMAIL = "userEmail";
-    private static final String KEY_USER_NAME = "userName";
-
+    public static final String KEY_USER_EMAIL = "userEmail";
+    public static final String KEY_USER_NAME = "userName";
+    static final String PREF_NAME = "AklatiPrefs";
+    static final String KEY_IS_LOGGED_IN = "isLoggedIn";
     private static SharedPrefsHelper instance;
     private final SharedPreferences sharedPreferences;
 
@@ -37,6 +36,10 @@ public class SharedPrefsHelper {
                 .putString(KEY_USER_NAME, name)
                 .putString(KEY_USER_EMAIL, email)
                 .apply();
+    }
+
+    public String getData(String key) {
+        return sharedPreferences.getString(key, null);
     }
 
     public void clearSession() {
