@@ -1,13 +1,19 @@
 package com.example.aklati.presentation.meal_details;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,6 +28,8 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.bumptech.glide.Glide;
 import com.example.aklati.R;
 import com.example.aklati.data.models.MealDetails;
+import com.example.aklati.data.remote.network.RetrofitClient;
+import com.example.aklati.data.repository.MealRepository;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -30,8 +38,10 @@ import java.util.List;
 
 public class MealDetailsFragment extends Fragment implements MealDetailsContract.View {
 
-    public static final String ARG_MEAL = "meal";
-
+    public static final String ARG_MEAL_ID = "mealId";
+    private static final String TAG = "MealDetailsFragment";
+    private View scrollContent;
+    private View layoutLoading;
     private ImageView ivMealDetailImage;
     private TextView tvDetailMealName;
     private TextView tvDetailArea;
@@ -44,6 +54,10 @@ public class MealDetailsFragment extends Fragment implements MealDetailsContract
 
     private MealDetailsPresenter presenter;
     private MealDetails currentMealDetails;
+    private String mealId;
+    private View layoutError;
+    private TextView tvErrorTitle;
+    private View btnRetry;
 
     public MealDetailsFragment() {
     }
@@ -58,12 +72,14 @@ public class MealDetailsFragment extends Fragment implements MealDetailsContract
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Get meal from arguments
+        // Get meal ID from arguments
         if (getArguments() != null) {
-            currentMealDetails = (MealDetails) getArguments().getSerializable(ARG_MEAL);
+            mealId = getArguments().getString(ARG_MEAL_ID);
         }
 
         // Bind views
+        scrollContent = view.findViewById(R.id.scrollContent);
+        layoutLoading = view.findViewById(R.id.layoutLoading);
         ivMealDetailImage = view.findViewById(R.id.ivMealDetailImage);
         tvDetailMealName = view.findViewById(R.id.tvDetailMealName);
         tvDetailArea = view.findViewById(R.id.tvDetailArea);
@@ -73,6 +89,12 @@ public class MealDetailsFragment extends Fragment implements MealDetailsContract
         llVideoSection = view.findViewById(R.id.llVideoSection);
         webViewVideo = view.findViewById(R.id.webViewVideo);
         fabFavorite = view.findViewById(R.id.fabFavorite);
+        layoutError = view.findViewById(R.id.layoutError);
+        tvErrorTitle = view.findViewById(R.id.tvErrorTitle);
+        btnRetry = view.findViewById(R.id.btnRetry);
+
+        // Setup WebView for YouTube video
+        setupWebView();
 
         // Back
         View btnBack = view.findViewById(R.id.btnDetailBack);
@@ -90,17 +112,59 @@ public class MealDetailsFragment extends Fragment implements MealDetailsContract
             NavHostFragment.findNavController(MealDetailsFragment.this).popBackStack();
         });
 
-        // Favourite toggle
-        fabFavorite.setOnClickListener(v -> {
-            if (presenter != null) presenter.toggleFavorite(currentMealDetails);
+        // Retry button
+        btnRetry.setOnClickListener(v -> {
+            if (mealId != null && !mealId.isEmpty()) {
+                layoutError.setVisibility(View.GONE);
+                presenter.loadMealDetails(mealId);
+            }
         });
 
+        // Favourite toggle
+        fabFavorite.setOnClickListener(v -> {
+            if (presenter != null && currentMealDetails != null) {
+                presenter.toggleFavorite(currentMealDetails);
+            }
+        });
+
+        MealRepository repo = new MealRepository(RetrofitClient.getService());
         // Presenter
-        presenter = new MealDetailsPresenter(this);
-        presenter.loadMealDetails(currentMealDetails);
+        presenter = new MealDetailsPresenter(this, repo);
+
+        // Load meal details
+        if (mealId != null && !mealId.isEmpty()) {
+            view.postDelayed(() -> {
+                if (presenter != null) {
+                    presenter.loadMealDetails(mealId);
+                }
+            }, 300);
+        } else {
+            showErrorMessage("Invalid meal ID");
+        }
     }
 
-    // ── MealDetailsContract.View ─────────────────────────────────────────────
+    @Override
+    public void showLoading() {
+        if (layoutError != null) {
+            layoutError.setVisibility(View.GONE);
+        }
+        if (layoutLoading != null) {
+            layoutLoading.setVisibility(View.VISIBLE);
+        }
+        if (scrollContent != null) {
+            scrollContent.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void hideLoading() {
+        if (layoutLoading != null) {
+            layoutLoading.setVisibility(View.GONE);
+        }
+        if (scrollContent != null) {
+            scrollContent.setVisibility(View.VISIBLE);
+        }
+    }
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -142,6 +206,7 @@ public class MealDetailsFragment extends Fragment implements MealDetailsContract
         String[] measureArr = mealDetails.getMeasures();
         List<String> ingredientList = new ArrayList<>();
         List<String> measureList = new ArrayList<>();
+
         for (int i = 0; i < ingredientArr.length; i++) {
             String ing = ingredientArr[i];
             if (ing != null && !ing.trim().isEmpty()) {
@@ -184,46 +249,138 @@ public class MealDetailsFragment extends Fragment implements MealDetailsContract
 
     @Override
     public void showErrorMessage(String error) {
-        // no-op for now
+        hideLoading();
+        if (scrollContent != null) {
+            scrollContent.setVisibility(View.GONE);
+        }
+        layoutError.setVisibility(View.VISIBLE);
+        tvErrorTitle.setText(R.string.something_went_wrong);
     }
 
     // ── Helpers ──────────────────────────────────────────────────────────────
 
     @SuppressLint("SetJavaScriptEnabled")
-    private void loadYouTubeVideo(String youtubeUrl) {
-        // Extract video ID from URL (supports watch?v=XXXX and youtu.be/XXXX)
-        String videoId = extractYoutubeId(youtubeUrl);
-        if (videoId == null || videoId.isEmpty()) return;
+    private void setupWebView() {
+        WebSettings webSettings = webViewVideo.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setLoadsImagesAutomatically(true);
+        webSettings.setAllowFileAccess(true);
+        webSettings.setAllowContentAccess(true);
+        webSettings.setMediaPlaybackRequiresUserGesture(false);
+        webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        webSettings.setUseWideViewPort(true);
+        webSettings.setLoadWithOverviewMode(true);
 
-        String embedHtml =
-                "<html><body style='margin:0;padding:0;background:#000;'>" +
-                        "<iframe width='100%' height='100%' " +
-                        "src='https://www.youtube.com/embed/" + videoId + "' " +
-                        "frameborder='0' allowfullscreen></iframe>" +
-                        "</body></html>";
+        // Custom User Agent for better compatibility
+        webSettings.setUserAgentString(
+                "Mozilla/5.0 (Linux; Android 10; Mobile) AppleWebKit/537.36 " +
+                        "Chrome/120.0.0.0 Mobile Safari/537.36"
+        );
 
-        WebSettings settings = webViewVideo.getSettings();
-        settings.setJavaScriptEnabled(true);
-        settings.setDomStorageEnabled(true);
-        settings.setMediaPlaybackRequiresUserGesture(false);
+        webViewVideo.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         webViewVideo.setWebChromeClient(new WebChromeClient());
-        webViewVideo.loadData(embedHtml, "text/html", "utf-8");
+
+        webViewVideo.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onReceivedError(
+                    WebView view,
+                    WebResourceRequest request,
+                    WebResourceError error
+            ) {
+                super.onReceivedError(view, request, error);
+                Log.e(TAG, "WebView error, fallback to YouTube app");
+                openYoutubeExternally();
+            }
+        });
     }
 
-    private String extractYoutubeId(String url) {
-        if (url == null) return null;
-        // https://www.youtube.com/watch?v=VIDEO_ID
-        if (url.contains("v=")) {
-            int start = url.indexOf("v=") + 2;
-            int end = url.indexOf("&", start);
-            return (end == -1) ? url.substring(start) : url.substring(start, end);
+    private void loadYouTubeVideo(String youtubeUrl) {
+        if (youtubeUrl == null || youtubeUrl.isEmpty()) {
+            llVideoSection.setVisibility(View.GONE);
+            return;
         }
-        // https://youtu.be/VIDEO_ID
-        if (url.contains("youtu.be/")) {
-            int start = url.lastIndexOf("/") + 1;
-            return url.substring(start);
+
+        String videoId = extractVideoId(youtubeUrl);
+        if (videoId.isEmpty()) {
+            llVideoSection.setVisibility(View.GONE);
+            return;
         }
-        return null;
+
+        llVideoSection.setVisibility(View.VISIBLE);
+
+        String html =
+                "<!DOCTYPE html>" +
+                        "<html>" +
+                        "<head>" +
+                        "<meta name='viewport' content='width=device-width, initial-scale=1.0'>" +
+                        "<style>" +
+                        "html, body { margin: 0; padding: 0; background: black; width: 100%; height: 100%; }" +
+                        "iframe { width: 100%; height: 100%; border: 0; }" +
+                        "</style>" +
+                        "</head>" +
+                        "<body>" +
+                        "<iframe src='https://www.youtube-nocookie.com/embed/" + videoId +
+                        "?playsinline=1&rel=0' " +
+                        "allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share' " +
+                        "allowfullscreen></iframe>" +
+                        "</body>" +
+                        "</html>";
+
+        webViewVideo.loadDataWithBaseURL(
+                "https://www.youtube-nocookie.com",
+                html,
+                "text/html",
+                "UTF-8",
+                null
+        );
+    }
+
+    private String extractVideoId(String url) {
+        try {
+            Uri uri = Uri.parse(url);
+
+            // https://www.youtube.com/watch?v=VIDEO_ID
+            if (uri.getQueryParameter("v") != null) {
+                return uri.getQueryParameter("v");
+            }
+
+            // https://youtu.be/VIDEO_ID
+            if (url.contains("youtu.be/")) {
+                return uri.getLastPathSegment();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Video ID extraction failed", e);
+        }
+        return "";
+    }
+
+    private void openYoutubeExternally() {
+        if (currentMealDetails != null && currentMealDetails.getYoutubeUrl() != null) {
+            Intent intent = new Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(currentMealDetails.getYoutubeUrl())
+            );
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (webViewVideo != null) {
+            webViewVideo.onPause();
+            webViewVideo.pauseTimers();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (webViewVideo != null) {
+            webViewVideo.onResume();
+            webViewVideo.resumeTimers();
+        }
     }
 
     @Override

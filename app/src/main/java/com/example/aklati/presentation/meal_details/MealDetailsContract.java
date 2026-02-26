@@ -5,6 +5,10 @@ import com.example.aklati.data.models.MealDetails;
 public interface MealDetailsContract {
 
     interface View {
+        void showLoading();
+
+        void hideLoading();
+
         void showMealDetails(MealDetails mealDetails);
 
         void updateFavoriteIcon(boolean isFavorite);
@@ -13,7 +17,7 @@ public interface MealDetailsContract {
     }
 
     interface Presenter {
-        void loadMealDetails(MealDetails mealDetails);
+        void loadMealDetails(String mealId);
 
         void toggleFavorite(MealDetails mealDetails);
 

@@ -1,55 +1,81 @@
 package com.example.aklati.presentation.meal_details;
 
+import android.util.Log;
+
 import com.example.aklati.data.models.MealDetails;
+import com.example.aklati.data.remote.responses.MealDetailsResponse;
+import com.example.aklati.data.repository.MealRepository;
+
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class MealDetailsPresenter implements MealDetailsContract.Presenter {
 
+    private static final String TAG = "MealDetailsPresenter";
+    private final MealRepository repository;
+    private final CompositeDisposable disposables;
     private MealDetailsContract.View view;
+    private MealDetails currentMeal;
 
-    public MealDetailsPresenter(MealDetailsContract.View view) {
+    public MealDetailsPresenter(MealDetailsContract.View view, MealRepository repository) {
         this.view = view;
+        this.repository = repository;
+        this.disposables = new CompositeDisposable();
     }
 
     @Override
-    public void loadMealDetails(MealDetails mealDetails) {
-        if (view == null || mealDetails == null) return;
+    public void loadMealDetails(String mealId) {
+        if (view == null || mealId == null || mealId.isEmpty()) return;
 
-        // If the mealDetails has no details yet (came from a list), enrich it with dummy details
-        if (mealDetails.getInstructions() == null || mealDetails.getInstructions().isEmpty()) {
-            MealDetails full = MealDetails.dummyDetailMeal();
-            // keep original identity fields, copy details
-            mealDetails.setInstructions(full.getInstructions());
-            mealDetails.setYoutubeUrl(full.getYoutubeUrl());
-            mealDetails.setIngredients(
-                    full.getIngredients()[0], full.getIngredients()[1],
-                    full.getIngredients()[2], full.getIngredients()[3],
-                    full.getIngredients()[4], full.getIngredients()[5],
-                    full.getIngredients()[6], full.getIngredients()[7],
-                    full.getIngredients()[8], full.getIngredients()[9]
-            );
-            mealDetails.setMeasures(
-                    full.getMeasures()[0], full.getMeasures()[1],
-                    full.getMeasures()[2], full.getMeasures()[3],
-                    full.getMeasures()[4], full.getMeasures()[5],
-                    full.getMeasures()[6], full.getMeasures()[7],
-                    full.getMeasures()[8], full.getMeasures()[9]
-            );
+        view.showLoading();
+
+        Disposable disposable = repository.getMealById(mealId)
+                .subscribeOn(Schedulers.io()).delay(1, TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        this::handleSuccess,
+                        this::handleError
+                );
+
+        disposables.add(disposable);
+    }
+
+    private void handleSuccess(MealDetailsResponse response) {
+        view.hideLoading();
+
+        if (response != null && response.getMeals() != null && !response.getMeals().isEmpty()) {
+            currentMeal = response.getMeals().get(0);
+            view.showMealDetails(currentMeal);
+            // TODO: Check if meal is favorite from Room database
+            view.updateFavoriteIcon(false);
+        } else {
+            view.showErrorMessage("Meal details not found");
         }
+    }
 
-        view.showMealDetails(mealDetails);
-        view.updateFavoriteIcon(mealDetails.isFavorite());
+    private void handleError(Throwable throwable) {
+        view.hideLoading();
+
+        Log.e(TAG, "Error loading meal details", throwable);
+        view.showErrorMessage("Failed to load meal details. Please check your internet connection.");
     }
 
     @Override
     public void toggleFavorite(MealDetails mealDetails) {
-        if (view == null || mealDetails == null) return;
-        mealDetails.setFavorite(!mealDetails.isFavorite());
-        view.updateFavoriteIcon(mealDetails.isFavorite());
+        if (view == null || mealDetails == null) {
+        }
+        // TODO: Save/remove from Room database
+
     }
 
     @Override
     public void detachView() {
         view = null;
+        disposables.clear();
     }
 }
 

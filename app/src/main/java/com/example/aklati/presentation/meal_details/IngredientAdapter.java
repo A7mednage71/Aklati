@@ -13,11 +13,6 @@ import com.example.aklati.R;
 import java.util.List;
 
 public class IngredientAdapter {
-
-    /**
-     * Inflates ingredient items into the given LinearLayout (horizontal).
-     * Uses TheMealDB ingredient thumbnail URL for the image.
-     */
     public static void populate(Context context, LinearLayout container,
                                 List<String> names, List<String> measures) {
         container.removeAllViews();

@@ -24,6 +24,7 @@ import com.example.aklati.data.models.MealDetails;
 import com.example.aklati.data.remote.network.RetrofitClient;
 import com.example.aklati.data.repository.MealRepository;
 import com.example.aklati.presentation.category_meals.CategoryMealsFragment;
+import com.example.aklati.presentation.meal_details.MealDetailsFragment;
 import com.facebook.shimmer.Shimmer;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.card.MaterialCardView;
@@ -170,8 +171,8 @@ public class homeFragment extends Fragment implements HomeContract.View {
     @Override
     public void navigateToDetails(MealDetails mealDetails) {
         Bundle args = new Bundle();
-        args.putString("mealId", mealDetails.getId());
-        Navigation.findNavController(requireView()).navigate(R.id.mealDetailsFragment, args);
+        args.putString(MealDetailsFragment.ARG_MEAL_ID, mealDetails.getId());
+        Navigation.findNavController(requireView()).navigate(R.id.action_home_to_mealDetails, args);
     }
 
     @Override

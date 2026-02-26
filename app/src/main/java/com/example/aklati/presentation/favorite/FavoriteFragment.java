@@ -117,7 +117,7 @@ public class FavoriteFragment extends Fragment implements FavoriteContract.View 
             @Override
             public void onMealClick(MealDetails mealDetails) {
                 Bundle args = new Bundle();
-                args.putSerializable(MealDetailsFragment.ARG_MEAL, mealDetails);
+                args.putString(MealDetailsFragment.ARG_MEAL_ID, mealDetails.getId());
                 NavHostFragment.findNavController(FavoriteFragment.this)
                         .navigate(R.id.action_favorite_to_mealDetails, args);
             }

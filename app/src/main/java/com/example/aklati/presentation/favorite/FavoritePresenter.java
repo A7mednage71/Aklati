@@ -2,8 +2,6 @@ package com.example.aklati.presentation.favorite;
 
 import com.example.aklati.data.models.MealDetails;
 
-import java.util.List;
-
 public class FavoritePresenter implements FavoriteContract.Presenter {
 
     private FavoriteContract.View view;
@@ -16,12 +14,12 @@ public class FavoritePresenter implements FavoriteContract.Presenter {
     public void getFavorites() {
         // TODO: implement real DB/repo logic
         if (view != null) {
-            List<MealDetails> dummyList = MealDetails.dummyMeals();
-            if (dummyList.isEmpty()) {
-                view.showEmptyState();
-            } else {
-                view.showFavorites(dummyList);
-            }
+//            List<MealDetails> dummyList =;
+//            if (dummyList.isEmpty()) {
+//                view.showEmptyState();
+//            } else {
+//                view.showFavorites(dummyList);
+//            }
         }
     }
 

@@ -21,6 +21,7 @@ import com.example.aklati.R;
 import com.example.aklati.data.models.Meal;
 import com.example.aklati.data.remote.network.RetrofitClient;
 import com.example.aklati.data.repository.MealRepository;
+import com.example.aklati.presentation.meal_details.MealDetailsFragment;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.button.MaterialButton;
 
@@ -139,7 +140,7 @@ public class CategoryMealsFragment extends Fragment implements CategoryMealsCont
         MealGridAdapter adapter = new MealGridAdapter(meals, meal -> {
             if (meal == null) return;
             Bundle args = new Bundle();
-            args.putSerializable("meal", meal);
+            args.putString(MealDetailsFragment.ARG_MEAL_ID, meal.getId());
             try {
                 Navigation.findNavController(requireView()).navigate(R.id.action_categoryMeals_to_mealDetails, args);
             } catch (Exception e) {

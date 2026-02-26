@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.aklati.R;
 import com.example.aklati.data.models.Meal;
 import com.example.aklati.presentation.category_meals.MealGridAdapter;
+import com.example.aklati.presentation.meal_details.MealDetailsFragment;
 
 import java.util.List;
 
@@ -116,7 +117,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
 
         MealGridAdapter adapter = new MealGridAdapter(meals, meal -> {
             Bundle args = new Bundle();
-            args.putSerializable("meal", meal);
+            args.putString(MealDetailsFragment.ARG_MEAL_ID, meal.getId());
             Navigation.findNavController(requireView())
                     .navigate(R.id.action_search_to_mealDetails, args);
         });

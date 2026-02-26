@@ -61,6 +61,13 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_home_to_mealDetails"
+            app:destination="@id/mealDetailsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
@@ -103,7 +110,12 @@
         android:id="@+id/mealDetailsFragment"
         android:name="com.example.aklati.presentation.meal_details.MealDetailsFragment"
         android:label="Meal Details"
-        tools:layout="@layout/fragment_meal_details" />
+        tools:layout="@layout/fragment_meal_details">
+        <argument
+            android:name="mealId"
+            android:defaultValue=""
+            app:argType="string" />
+    </fragment>
 
     <fragment
         android:id="@+id/profileFragment"

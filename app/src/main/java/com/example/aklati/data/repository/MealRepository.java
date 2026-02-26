@@ -26,4 +26,12 @@ public class MealRepository {
         return apiService.getMealsByCategory(category);
     }
 
+    public Single<MealDetailsResponse> getMealById(String mealId) {
+        return apiService.getMealById(mealId);
+    }
+
+    public Single<MealDetailsResponse> searchMeals(String query) {
+        return apiService.searchMeals(query);
+    }
+
 }

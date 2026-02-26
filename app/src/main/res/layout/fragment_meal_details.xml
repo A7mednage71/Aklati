@@ -1,265 +1,302 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#FAFAFA"
-    android:fillViewport="true"
-    tools:ignore="HardcodedText">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollContent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingBottom="32dp">
+        android:layout_height="match_parent"
+        android:background="#FAFAFA"
+        android:fillViewport="true"
+        android:visibility="gone"
+        tools:ignore="HardcodedText">
 
-        <!-- ── Hero image section ───────────────────────────────────── -->
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="280dp">
-
-            <!-- Hero mealDetails image -->
-            <ImageView
-                android:id="@+id/ivMealDetailImage"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:contentDescription="@string/meal_image_desc"
-                android:scaleType="centerCrop"
-                android:src="@drawable/aklati_logo" />
-
-            <!-- Dark gradient overlay at bottom of image -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:layout_gravity="bottom"
-                android:background="@drawable/gradient_overlay" />
-
-            <!-- Back button top-start -->
-            <ImageButton
-                android:id="@+id/btnDetailBack"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:layout_gravity="top|start"
-                android:layout_margin="16dp"
-                android:background="@drawable/bg_back_button"
-                android:clickable="true"
-                android:contentDescription="@string/tap_to_view_recipe"
-                android:elevation="8dp"
-                android:focusable="true"
-                android:padding="10dp"
-                android:src="@drawable/ic_arrow_back"
-                app:tint="@color/white" />
-
-            <!-- Favourite FAB bottom-end -->
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fabFavorite"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|end"
-                android:layout_margin="16dp"
-                android:contentDescription="@string/add_to_favorites"
-                android:src="@drawable/ic_favorite"
-                app:backgroundTint="#FFFFFF"
-                app:elevation="6dp"
-                app:fabSize="normal"
-                app:tint="#FF5722" />
-
-        </FrameLayout>
-
-        <!-- ── MealDetails info section ───────────────────────────────────── -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#FAFAFA"
             android:orientation="vertical"
-            android:paddingHorizontal="20dp"
-            android:paddingTop="16dp"
-            android:paddingBottom="8dp">
+            android:paddingBottom="32dp">
 
-            <!-- MealDetails name -->
-            <TextView
-                android:id="@+id/tvDetailMealName"
+            <!-- ── Hero image section ───────────────────────────────────── -->
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_bold"
-                android:lineSpacingExtra="2dp"
-                android:textColor="#1A1A1A"
-                android:textSize="24sp"
-                tools:text="Teriyaki Chicken Casserole" />
+                android:layout_height="280dp">
 
-            <!-- Category + Country row -->
+                <!-- Hero mealDetails image -->
+                <ImageView
+                    android:id="@+id/ivMealDetailImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/meal_image_desc"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/aklati_logo" />
+
+                <!-- Dark gradient overlay at bottom of image -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:layout_gravity="bottom"
+                    android:background="@drawable/gradient_overlay" />
+
+                <!-- Back button top-start -->
+                <ImageButton
+                    android:id="@+id/btnDetailBack"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_gravity="top|start"
+                    android:layout_margin="16dp"
+                    android:background="@drawable/bg_back_button"
+                    android:clickable="true"
+                    android:contentDescription="@string/tap_to_view_recipe"
+                    android:elevation="8dp"
+                    android:focusable="true"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_arrow_back"
+                    app:tint="@color/white" />
+
+                <!-- Favourite FAB bottom-end -->
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fabFavorite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:layout_margin="16dp"
+                    android:contentDescription="@string/add_to_favorites"
+                    android:src="@drawable/ic_favorite"
+                    app:backgroundTint="#FFFFFF"
+                    app:elevation="6dp"
+                    app:fabSize="normal"
+                    app:tint="#FF5722" />
+
+            </FrameLayout>
+
+            <!-- ── MealDetails info section ───────────────────────────────────── -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:background="#FAFAFA"
+                android:orientation="vertical"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp">
 
-                <!-- Category chip -->
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipCategory"
-                    style="@style/Widget.Material3.Chip.Assist.Elevated"
-                    android:layout_width="wrap_content"
-                    android:layout_height="32dp"
-                    android:clickable="false"
-                    android:focusable="false"
-                    android:fontFamily="@font/poppins_medium"
-                    android:textColor="#FF5722"
-                    android:textSize="12sp"
-                    app:chipBackgroundColor="#FFF3E0"
-                    app:chipCornerRadius="12dp"
-                    app:chipStrokeWidth="0dp"
-                    tools:text="Chicken" />
-
-                <!-- Origin country -->
-                <LinearLayout
-                    android:layout_width="wrap_content"
+                <!-- MealDetails name -->
+                <TextView
+                    android:id="@+id/tvDetailMealName"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
+                    android:fontFamily="@font/poppins_bold"
+                    android:lineSpacingExtra="2dp"
+                    android:textColor="#1A1A1A"
+                    android:textSize="24sp"
+                    tools:text="Teriyaki Chicken Casserole" />
+
+                <!-- Category + Country row -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
-                    <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:contentDescription="@string/meal_image_desc"
-                        android:src="@drawable/ic_location"
-                        app:tint="#757575" />
+                    <!-- Category chip -->
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipCategory"
+                        style="@style/Widget.Material3.Chip.Assist.Elevated"
+                        android:layout_width="wrap_content"
+                        android:layout_height="32dp"
+                        android:clickable="false"
+                        android:focusable="false"
+                        android:fontFamily="@font/poppins_medium"
+                        android:textColor="#FF5722"
+                        android:textSize="12sp"
+                        app:chipBackgroundColor="#FFF3E0"
+                        app:chipCornerRadius="12dp"
+                        app:chipStrokeWidth="0dp"
+                        tools:text="Chicken" />
 
-                    <TextView
-                        android:id="@+id/tvDetailArea"
+                    <!-- Origin country -->
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
-                        android:fontFamily="@font/poppins_regular"
-                        android:textColor="#757575"
-                        android:textSize="13sp"
-                        tools:text="Japanese Cuisine" />
+                        android:layout_marginStart="12dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:contentDescription="@string/meal_image_desc"
+                            android:src="@drawable/ic_location"
+                            app:tint="#757575" />
+
+                        <TextView
+                            android:id="@+id/tvDetailArea"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:fontFamily="@font/poppins_regular"
+                            android:textColor="#757575"
+                            android:textSize="13sp"
+                            tools:text="Japanese Cuisine" />
+                    </LinearLayout>
+
                 </LinearLayout>
+
+                <!-- Divider -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="18dp"
+                    android:layout_marginBottom="4dp"
+                    android:background="#F0F0F0" />
 
             </LinearLayout>
 
-            <!-- Divider -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="18dp"
-                android:layout_marginBottom="4dp"
-                android:background="#F0F0F0" />
-
-        </LinearLayout>
-
-        <!-- ── Ingredients section ─────────────────────────────────── -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="20dp"
-            android:paddingTop="20dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_bold"
-                android:text="@string/ingredients"
-                android:textColor="#1A1A1A"
-                android:textSize="18sp" />
-
-            <!-- Horizontal scrollable ingredient chips -->
-            <HorizontalScrollView
+            <!-- ── Ingredients section ─────────────────────────────────── -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:scrollbars="none">
-
-                <LinearLayout
-                    android:id="@+id/llIngredients"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingBottom="4dp" />
-
-            </HorizontalScrollView>
-
-        </LinearLayout>
-
-        <!-- ── Steps section ──────────────────────────────────────── -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="20dp"
-            android:paddingTop="24dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_bold"
-                android:text="@string/steps"
-                android:textColor="#1A1A1A"
-                android:textSize="18sp" />
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                app:cardBackgroundColor="#FFFFFF"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="0dp"
-                app:strokeColor="#F0F0F0"
-                app:strokeWidth="1dp">
+                android:orientation="vertical"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="20dp">
 
                 <TextView
-                    android:id="@+id/tvInstructions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_bold"
+                    android:text="@string/ingredients"
+                    android:textColor="#1A1A1A"
+                    android:textSize="18sp" />
+
+                <!-- Horizontal scrollable ingredient chips -->
+                <HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_regular"
-                    android:lineSpacingExtra="6dp"
-                    android:padding="18dp"
-                    android:textColor="#424242"
-                    android:textSize="14sp"
-                    tools:text="Step 1: Preheat oven...\n\nStep 2: Mix ingredients..." />
+                    android:layout_marginTop="14dp"
+                    android:scrollbars="none">
 
-            </com.google.android.material.card.MaterialCardView>
+                    <LinearLayout
+                        android:id="@+id/llIngredients"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingBottom="4dp" />
 
-        </LinearLayout>
+                </HorizontalScrollView>
 
-        <!-- ── Video section ──────────────────────────────────────── -->
-        <LinearLayout
-            android:id="@+id/llVideoSection"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="20dp"
-            android:paddingTop="24dp"
-            android:visibility="gone">
+            </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_bold"
-                android:text="@string/watch_video"
-                android:textColor="#1A1A1A"
-                android:textSize="18sp" />
-
-            <com.google.android.material.card.MaterialCardView
+            <!-- ── Steps section ──────────────────────────────────────── -->
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="220dp"
-                android:layout_marginTop="12dp"
-                app:cardBackgroundColor="#000000"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="4dp">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="24dp">
 
-                <WebView
-                    android:id="@+id/webViewVideo"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_bold"
+                    android:text="@string/steps"
+                    android:textColor="#1A1A1A"
+                    android:textSize="18sp" />
+
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    app:cardBackgroundColor="#FFFFFF"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="#F0F0F0"
+                    app:strokeWidth="1dp">
 
-            </com.google.android.material.card.MaterialCardView>
+                    <TextView
+                        android:id="@+id/tvInstructions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_regular"
+                        android:lineSpacingExtra="6dp"
+                        android:padding="18dp"
+                        android:textColor="#424242"
+                        android:textSize="14sp"
+                        tools:text="Step 1: Preheat oven...\n\nStep 2: Mix ingredients..." />
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+            <!-- ── Video section ──────────────────────────────────────── -->
+            <LinearLayout
+                android:id="@+id/llVideoSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="24dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_bold"
+                    android:text="@string/watch_video"
+                    android:textColor="#1A1A1A"
+                    android:textSize="18sp" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp"
+                    android:layout_marginTop="12dp"
+                    app:cardBackgroundColor="#000000"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="4dp">
+
+                    <WebView
+                        android:id="@+id/webViewVideo"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+    <!-- Loading State -->
+    <FrameLayout
+        android:id="@+id/layoutLoading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone">
 
-</androidx.core.widget.NestedScrollView>
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottieLoading"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/loading_animation2" />
+
+    </FrameLayout>
+
+    <include
+        android:id="@+id/layoutError"
+        layout="@layout/layout_error_state"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+</FrameLayout>
+
