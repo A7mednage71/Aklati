@@ -22,5 +22,5 @@ public interface ApiService {
     Single<MealDetailsResponse> getMealById(@Query("i") String mealId);
 
     @GET("search.php")
-    Single<MealDetailsResponse> searchMeals(@Query("s") String query);
+    Single<MealResponse> searchMeals(@Query("s") String query);
 }

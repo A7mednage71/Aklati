@@ -30,7 +30,7 @@ public class MealRepository {
         return apiService.getMealById(mealId);
     }
 
-    public Single<MealDetailsResponse> searchMeals(String query) {
+    public Single<MealResponse> searchMeals(String query) {
         return apiService.searchMeals(query);
     }
 

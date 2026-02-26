@@ -1,14 +1,17 @@
 package com.example.aklati.presentation.search;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,8 +23,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aklati.R;
 import com.example.aklati.data.models.Meal;
+import com.example.aklati.data.remote.network.RetrofitClient;
+import com.example.aklati.data.repository.MealRepository;
 import com.example.aklati.presentation.category_meals.MealGridAdapter;
 import com.example.aklati.presentation.meal_details.MealDetailsFragment;
+import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.List;
 
@@ -30,9 +36,11 @@ public class SearchFragment extends Fragment implements SearchContract.View {
     private EditText etSearch;
     private ImageView ivClearSearch;
     private RecyclerView rvSearchResults;
-    private ProgressBar progressBar;
+    private ShimmerFrameLayout shimmerLayout;
     private View emptyStateLayout;
     private View initialStateLayout;
+    private View layoutError;
+    private Button btnRetry;
     private TextView tvEmptyQuery;
     private TextView tvResultsCount;
 
@@ -55,9 +63,11 @@ public class SearchFragment extends Fragment implements SearchContract.View {
         etSearch = view.findViewById(R.id.etSearch);
         ivClearSearch = view.findViewById(R.id.ivClearSearch);
         rvSearchResults = view.findViewById(R.id.rvSearchResults);
-        progressBar = view.findViewById(R.id.progressBar);
+        shimmerLayout = view.findViewById(R.id.shimmerLayout);
         emptyStateLayout = view.findViewById(R.id.emptyStateLayout);
         initialStateLayout = view.findViewById(R.id.initialStateLayout);
+        layoutError = view.findViewById(R.id.layoutError);
+        btnRetry = view.findViewById(R.id.btnRetry);
         tvEmptyQuery = view.findViewById(R.id.tvEmptyQuery);
         tvResultsCount = view.findViewById(R.id.tvResultsCount);
 
@@ -65,8 +75,17 @@ public class SearchFragment extends Fragment implements SearchContract.View {
         rvSearchResults.setLayoutManager(new GridLayoutManager(getContext(), 2));
         rvSearchResults.setNestedScrollingEnabled(false);
 
-        // Presenter
-        presenter = new SearchPresenter(this);
+        // Create Repository and Presenter
+        MealRepository repository = new MealRepository(RetrofitClient.getService());
+        presenter = new SearchPresenter(this, repository);
+
+        // Retry button
+        btnRetry.setOnClickListener(v -> {
+            String query = etSearch.getText().toString().trim();
+            if (!query.isEmpty()) {
+                presenter.searchMeals(query);
+            }
+        });
 
         // Search input listener
         etSearch.addTextChangedListener(new TextWatcher() {
@@ -86,22 +105,56 @@ public class SearchFragment extends Fragment implements SearchContract.View {
             }
         });
 
+        // Handle keyboard search action
+        etSearch.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                hideKeyboard();
+                return true;
+            }
+            return false;
+        });
+
         // Clear button
-        ivClearSearch.setOnClickListener(v -> etSearch.setText(""));
+        ivClearSearch.setOnClickListener(v -> {
+            etSearch.setText("");
+            etSearch.requestFocus();
+            showKeyboard();
+        });
+    }
+
+    // Hide soft keyboard
+    private void hideKeyboard() {
+        if (getActivity() != null && etSearch != null) {
+            InputMethodManager imm = (InputMethodManager) getActivity()
+                    .getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(etSearch.getWindowToken(), 0);
+        }
+    }
+
+    // Show soft keyboard
+    private void showKeyboard() {
+        if (getActivity() != null && etSearch != null) {
+            InputMethodManager imm = (InputMethodManager) getActivity()
+                    .getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(etSearch, InputMethodManager.SHOW_IMPLICIT);
+        }
     }
 
     @Override
     public void showLoading() {
-        progressBar.setVisibility(View.VISIBLE);
+        shimmerLayout.setVisibility(View.VISIBLE);
+        shimmerLayout.startShimmer();
         rvSearchResults.setVisibility(View.GONE);
         emptyStateLayout.setVisibility(View.GONE);
         initialStateLayout.setVisibility(View.GONE);
+        layoutError.setVisibility(View.GONE);
         tvResultsCount.setVisibility(View.GONE);
     }
 
     @Override
     public void hideLoading() {
-        progressBar.setVisibility(View.GONE);
+        shimmerLayout.stopShimmer();
+        shimmerLayout.setVisibility(View.GONE);
     }
 
 
@@ -110,6 +163,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
         rvSearchResults.setVisibility(View.VISIBLE);
         emptyStateLayout.setVisibility(View.GONE);
         initialStateLayout.setVisibility(View.GONE);
+        layoutError.setVisibility(View.GONE);
         tvResultsCount.setVisibility(View.VISIBLE);
 
         String countText = meals.size() + " result" + (meals.size() == 1 ? "" : "s") + " found";
@@ -129,6 +183,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
         rvSearchResults.setVisibility(View.GONE);
         emptyStateLayout.setVisibility(View.VISIBLE);
         initialStateLayout.setVisibility(View.GONE);
+        layoutError.setVisibility(View.GONE);
         tvResultsCount.setVisibility(View.GONE);
 
         tvEmptyQuery.setText(getString(R.string.search_no_results_for, query));
@@ -139,12 +194,17 @@ public class SearchFragment extends Fragment implements SearchContract.View {
         rvSearchResults.setVisibility(View.GONE);
         emptyStateLayout.setVisibility(View.GONE);
         initialStateLayout.setVisibility(View.VISIBLE);
+        layoutError.setVisibility(View.GONE);
         tvResultsCount.setVisibility(View.GONE);
     }
 
     @Override
     public void showErrorMessage(String error) {
-        showEmptyState(error);
+        rvSearchResults.setVisibility(View.GONE);
+        emptyStateLayout.setVisibility(View.GONE);
+        initialStateLayout.setVisibility(View.GONE);
+        layoutError.setVisibility(View.VISIBLE);
+        tvResultsCount.setVisibility(View.GONE);
     }
 
     @Override
