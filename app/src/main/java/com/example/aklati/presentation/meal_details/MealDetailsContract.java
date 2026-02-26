@@ -1,11 +1,11 @@
 package com.example.aklati.presentation.meal_details;
 
-import com.example.aklati.data.models.Meal;
+import com.example.aklati.data.models.MealDetails;
 
 public interface MealDetailsContract {
 
     interface View {
-        void showMealDetails(Meal meal);
+        void showMealDetails(MealDetails mealDetails);
 
         void updateFavoriteIcon(boolean isFavorite);
 
@@ -13,9 +13,9 @@ public interface MealDetailsContract {
     }
 
     interface Presenter {
-        void loadMealDetails(Meal meal);
+        void loadMealDetails(MealDetails mealDetails);
 
-        void toggleFavorite(Meal meal);
+        void toggleFavorite(MealDetails mealDetails);
 
         void detachView();
     }

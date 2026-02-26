@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aklati.R;
-import com.example.aklati.data.models.Meal;
+import com.example.aklati.data.models.MealDetails;
 import com.example.aklati.presentation.meal_details.MealDetailsFragment;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -73,15 +73,15 @@ public class FavoriteFragment extends Fragment implements FavoriteContract.View 
                     public void onSwiped(@NonNull RecyclerView.ViewHolder vh, int direction) {
                         int position = vh.getBindingAdapterPosition();
                         if (adapter != null) {
-                            Meal removedMeal = adapter.getMealAt(position);
+                            MealDetails removedMealDetails = adapter.getMealAt(position);
                             adapter.removeItem(position);
-                            presenter.removeFavorite(removedMeal);
+                            presenter.removeFavorite(removedMealDetails);
 
                             Snackbar.make(rvFavorites,
                                             getString(R.string.removed_from_favorites),
                                             Snackbar.LENGTH_LONG)
                                     .setAction(getString(R.string.undo), v -> {
-                                        adapter.restoreItem(removedMeal, position);
+                                        adapter.restoreItem(removedMealDetails, position);
                                         rvFavorites.scrollToPosition(position);
                                     })
                                     .show();
@@ -100,14 +100,14 @@ public class FavoriteFragment extends Fragment implements FavoriteContract.View 
     }
 
     @Override
-    public void showFavorites(List<Meal> meals) {
+    public void showFavorites(List<MealDetails> mealDetails) {
         layoutEmptyState.setVisibility(View.GONE);
         rvFavorites.setVisibility(View.VISIBLE);
-        adapter = new FavoriteMealAdapter(meals, new FavoriteMealAdapter.OnFavoriteActionListener() {
+        adapter = new FavoriteMealAdapter(mealDetails, new FavoriteMealAdapter.OnFavoriteActionListener() {
             @Override
-            public void onRemoveFavorite(Meal meal, int position) {
+            public void onRemoveFavorite(MealDetails mealDetails, int position) {
                 adapter.removeItem(position);
-                presenter.removeFavorite(meal);
+                presenter.removeFavorite(mealDetails);
                 Snackbar.make(rvFavorites,
                                 getString(R.string.removed_from_favorites),
                                 Snackbar.LENGTH_SHORT)
@@ -115,9 +115,9 @@ public class FavoriteFragment extends Fragment implements FavoriteContract.View 
             }
 
             @Override
-            public void onMealClick(Meal meal) {
+            public void onMealClick(MealDetails mealDetails) {
                 Bundle args = new Bundle();
-                args.putSerializable(MealDetailsFragment.ARG_MEAL, meal);
+                args.putSerializable(MealDetailsFragment.ARG_MEAL, mealDetails);
                 NavHostFragment.findNavController(FavoriteFragment.this)
                         .navigate(R.id.action_favorite_to_mealDetails, args);
             }

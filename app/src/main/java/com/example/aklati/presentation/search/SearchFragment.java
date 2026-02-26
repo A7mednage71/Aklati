@@ -103,6 +103,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
         progressBar.setVisibility(View.GONE);
     }
 
+
     @Override
     public void showMeals(List<Meal> meals) {
         rvSearchResults.setVisibility(View.VISIBLE);

@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="280dp">
 
-            <!-- Hero meal image -->
+            <!-- Hero mealDetails image -->
             <ImageView
                 android:id="@+id/ivMealDetailImage"
                 android:layout_width="match_parent"
@@ -67,7 +67,7 @@
 
         </FrameLayout>
 
-        <!-- ── Meal info section ───────────────────────────────────── -->
+        <!-- ── MealDetails info section ───────────────────────────────────── -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -77,7 +77,7 @@
             android:paddingTop="16dp"
             android:paddingBottom="8dp">
 
-            <!-- Meal name -->
+            <!-- MealDetails name -->
             <TextView
                 android:id="@+id/tvDetailMealName"
                 android:layout_width="match_parent"

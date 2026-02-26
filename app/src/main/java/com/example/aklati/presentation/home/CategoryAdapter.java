@@ -43,8 +43,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         holder.tvCategoryName.setText(category.getName());
         Glide.with(holder.itemView.getContext())
                 .load(category.getImage())
-                .placeholder(R.drawable.ic_home)
-                .error(R.drawable.ic_home)
+                .placeholder(R.drawable.aklati_logo)
+                .error(R.drawable.ic_error)
                 .centerCrop()
                 .into(holder.ivCategoryImage);
 

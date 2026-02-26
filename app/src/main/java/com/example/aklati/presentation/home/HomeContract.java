@@ -2,7 +2,7 @@ package com.example.aklati.presentation.home;
 
 
 import com.example.aklati.data.models.Category;
-import com.example.aklati.data.models.Meal;
+import com.example.aklati.data.models.MealDetails;
 
 import java.util.List;
 
@@ -13,13 +13,13 @@ public interface HomeContract {
 
         void hideLoading();
 
-        void showRandomMeal(Meal meal);
+        void showRandomMeal(MealDetails meal);
 
         void showCategories(List<Category> categories);
 
         void showUserName(String name);
 
-        void navigateToDetails(Meal meal);
+        void navigateToDetails(MealDetails meal);
 
         void navigateToSearch();
 
@@ -35,9 +35,9 @@ public interface HomeContract {
 
         void searchMeals(String query);
 
-        void addToFavorites(Meal meal);
+        void addToFavorites(MealDetails meal);
 
-        void removeFromFavorites(Meal meal);
+        void removeFromFavorites(MealDetails meal);
 
         void detachView();
     }

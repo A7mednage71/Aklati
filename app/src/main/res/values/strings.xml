@@ -34,7 +34,7 @@
     <string name="explore_meals">Explore Meals</string>
     <string name="my_favorites">My Favorites ❤️</string>
     <string name="favorites_subtitle">Your saved recipes in one place</string>
-    <string name="favorites_empty_desc">Start exploring meals and save your favorites here by tapping the ❤️ icon</string>
+    <string name="favorites_empty_desc">Start exploring mealDetails and save your favorites here by tapping the ❤️ icon</string>
     <string name="meal_image_desc">Meal image</string>
     <string name="remove_from_favorites">Remove from favorites</string>
     <string name="tap_to_view_recipe">Tap to view recipe</string>
@@ -43,11 +43,11 @@
     <string name="popular">🔥 Popular</string>
     <string name="category_meals_title">Category Meals</string>
     <string name="explore_recipes">Explore delicious recipes</string>
-    <string name="no_meals_found">No meals found</string>
+    <string name="no_meals_found">No mealDetails found</string>
     <string name="no_meals_in_category">There are no recipes in this category yet.</string>
     <string name="no_recipes_found">No recipes found</string>
     <string name="category_image_desc">Category image</string>
-    <!-- Meal Details -->
+    <!-- MealDetails Details -->
     <string name="ingredients">🥗 Ingredients</string>
     <string name="steps">📋 Steps</string>
     <string name="watch_video">🎬 Watch Video</string>
@@ -62,7 +62,7 @@
     <string name="search_subtitle">Find recipes by name, category or cuisine</string>
     <string name="search_hint">e.g. Chicken, Italian, Pasta…</string>
     <string name="search_initial_title">What are you craving?</string>
-    <string name="search_initial_desc">Type a meal name, category or cuisine above</string>
+    <string name="search_initial_desc">Type a mealDetails name, category or cuisine above</string>
     <string name="search_no_results">No Results Found</string>
     <string name="search_no_results_for">No results for \"%1$s\"</string>
     <string name="search_clear">Clear search</string>
@@ -84,5 +84,9 @@
     <string name="push_notifications">Push Notifications</string>
     <string name="your_activity">Your Activity</string>
     <string name="something_went_wrong">Oops! Something went wrong, Please try again later</string>
+    <string name="retry">retry</string>
+    <string name="please_try_again">Please try again</string>
+    <string name="error_occurred">Error Occurred</string>
+    <string name="try_again">Try Again</string>
 
 </resources>

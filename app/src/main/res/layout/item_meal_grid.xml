@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Meal Image -->
+        <!-- MealDetails Image -->
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="150dp">
@@ -41,7 +41,7 @@
 
         </FrameLayout>
 
-        <!-- Meal Info -->
+        <!-- MealDetails Info -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -58,36 +58,6 @@
                 android:textColor="#212121"
                 android:textSize="14sp"
                 tools:text="Spaghetti Bolognese" />
-
-            <!-- Area chip -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:background="@drawable/chip_category_bg"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingStart="8dp"
-                android:paddingTop="3dp"
-                android:paddingEnd="8dp"
-                android:paddingBottom="3dp">
-
-                <ImageView
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
-                    android:src="@drawable/ic_location"
-                    app:tint="#FF5722" />
-
-                <TextView
-                    android:id="@+id/tvMealArea"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:fontFamily="@font/poppins_regular"
-                    android:textColor="#FF5722"
-                    android:textSize="11sp"
-                    tools:text="Italian" />
-            </LinearLayout>
 
         </LinearLayout>
     </LinearLayout>

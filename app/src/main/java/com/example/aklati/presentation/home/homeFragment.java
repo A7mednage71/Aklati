@@ -20,9 +20,10 @@ import com.bumptech.glide.Glide;
 import com.example.aklati.R;
 import com.example.aklati.data.local.prefs.SharedPrefsHelper;
 import com.example.aklati.data.models.Category;
-import com.example.aklati.data.models.Meal;
+import com.example.aklati.data.models.MealDetails;
 import com.example.aklati.data.remote.network.RetrofitClient;
 import com.example.aklati.data.repository.MealRepository;
+import com.example.aklati.presentation.category_meals.CategoryMealsFragment;
 import com.facebook.shimmer.Shimmer;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.card.MaterialCardView;
@@ -36,16 +37,16 @@ public class homeFragment extends Fragment implements HomeContract.View {
     private ImageView ivRandomMeal;
     private TextView tvRandomMealName;
     private MaterialCardView cardRandomMeal;
-    private Meal currentRandomMeal;
+    private MealDetails currentRandomMealDetails;
     // Loading state views
     private ShimmerFrameLayout shimmerLayout;
     private View contentScrollView;
     // Error handling views
     private View layoutError;
-    private TextView tvError;
+    private TextView tvErrorTitle;
     private Button btnRetry;
     // User data views
-    private TextView tvUserName;
+    private TextView tvWelcomeGreeting;
 
     public homeFragment() {
     }
@@ -64,7 +65,7 @@ public class homeFragment extends Fragment implements HomeContract.View {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        tvUserName = view.findViewById(R.id.tvWelcomeGreeting);
+        tvWelcomeGreeting = view.findViewById(R.id.tvWelcomeGreeting);
         rvCategories = view.findViewById(R.id.rvCategories);
         etSearch = view.findViewById(R.id.etSearch);
         ivRandomMeal = view.findViewById(R.id.ivRandomMeal);
@@ -73,7 +74,7 @@ public class homeFragment extends Fragment implements HomeContract.View {
         shimmerLayout = view.findViewById(R.id.shimmerLayout);
         contentScrollView = view.findViewById(R.id.contentScrollView);
         layoutError = view.findViewById(R.id.layoutError);
-        tvError = view.findViewById(R.id.tvError);
+        tvErrorTitle = view.findViewById(R.id.tvErrorTitle);
         btnRetry = view.findViewById(R.id.btnRetry);
 
         rvCategories.setLayoutManager(
@@ -83,7 +84,7 @@ public class homeFragment extends Fragment implements HomeContract.View {
         etSearch.setOnClickListener(v -> navigateToSearch());
 
         cardRandomMeal.setOnClickListener(v -> {
-            if (currentRandomMeal != null) navigateToDetails(currentRandomMeal);
+            if (currentRandomMealDetails != null) navigateToDetails(currentRandomMealDetails);
         });
 
         btnRetry.setOnClickListener(v -> {
@@ -94,9 +95,14 @@ public class homeFragment extends Fragment implements HomeContract.View {
 
         MealRepository repo = new MealRepository(RetrofitClient.getService());
         presenter = new HomePresenter(this, repo, SharedPrefsHelper.getInstance(requireContext()));
-        presenter.getUserName();
-        presenter.getRandomMeal();
-        presenter.getCategories();
+
+        view.postDelayed(() -> {
+            if (presenter != null) {
+                presenter.getUserName();
+                presenter.getRandomMeal();
+                presenter.getCategories();
+            }
+        }, 300);
     }
 
     @Override
@@ -121,8 +127,8 @@ public class homeFragment extends Fragment implements HomeContract.View {
     }
 
     @Override
-    public void showRandomMeal(Meal meal) {
-        currentRandomMeal = meal;
+    public void showRandomMeal(MealDetails meal) {
+        currentRandomMealDetails = meal;
         tvRandomMealName.setText(meal.getName());
         Glide.with(this)
                 .load(meal.getImage())
@@ -135,8 +141,8 @@ public class homeFragment extends Fragment implements HomeContract.View {
     public void showCategories(List<Category> categories) {
         CategoryAdapter adapter = new CategoryAdapter(categories, category -> {
             Bundle args = new Bundle();
-            args.putString("categoryName", category.getName());
-            args.putInt("categoryImageRes", category.getDrawableResId());
+            args.putString(CategoryMealsFragment.ARG_CATEGORY_NAME, category.getName());
+            args.putString(CategoryMealsFragment.ARG_CATEGORY_IMAGE, category.getImage());
             Navigation.findNavController(requireView())
                     .navigate(R.id.action_home_to_categoryMeals, args);
         });
@@ -146,9 +152,9 @@ public class homeFragment extends Fragment implements HomeContract.View {
     @Override
     public void showUserName(String name) {
         if (name != null && !name.isEmpty()) {
-            tvUserName.setText("Hi, " + name.split(" ")[0] + "!");
+            tvWelcomeGreeting.setText("Hi, " + name.split(" ")[0] + "!");
         } else {
-            tvUserName.setText("Hi, Foodie!");
+            tvWelcomeGreeting.setText("Hi, Foodie!");
         }
     }
 
@@ -158,13 +164,13 @@ public class homeFragment extends Fragment implements HomeContract.View {
         shimmerLayout.setVisibility(View.GONE);
         contentScrollView.setVisibility(View.GONE);
         layoutError.setVisibility(View.VISIBLE);
-        tvError.setText(R.string.something_went_wrong);
+        tvErrorTitle.setText(R.string.something_went_wrong);
     }
 
     @Override
-    public void navigateToDetails(Meal meal) {
+    public void navigateToDetails(MealDetails mealDetails) {
         Bundle args = new Bundle();
-        args.putString("mealId", meal.getId());
+        args.putString("mealId", mealDetails.getId());
         Navigation.findNavController(requireView()).navigate(R.id.mealDetailsFragment, args);
     }
 

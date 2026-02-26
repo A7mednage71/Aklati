@@ -1,6 +1,6 @@
 package com.example.aklati.presentation.meal_details;
 
-import com.example.aklati.data.models.Meal;
+import com.example.aklati.data.models.MealDetails;
 
 public class MealDetailsPresenter implements MealDetailsContract.Presenter {
 
@@ -11,23 +11,23 @@ public class MealDetailsPresenter implements MealDetailsContract.Presenter {
     }
 
     @Override
-    public void loadMealDetails(Meal meal) {
-        if (view == null || meal == null) return;
+    public void loadMealDetails(MealDetails mealDetails) {
+        if (view == null || mealDetails == null) return;
 
-        // If the meal has no details yet (came from a list), enrich it with dummy details
-        if (meal.getInstructions() == null || meal.getInstructions().isEmpty()) {
-            Meal full = Meal.dummyDetailMeal();
+        // If the mealDetails has no details yet (came from a list), enrich it with dummy details
+        if (mealDetails.getInstructions() == null || mealDetails.getInstructions().isEmpty()) {
+            MealDetails full = MealDetails.dummyDetailMeal();
             // keep original identity fields, copy details
-            meal.setInstructions(full.getInstructions());
-            meal.setYoutubeUrl(full.getYoutubeUrl());
-            meal.setIngredients(
+            mealDetails.setInstructions(full.getInstructions());
+            mealDetails.setYoutubeUrl(full.getYoutubeUrl());
+            mealDetails.setIngredients(
                     full.getIngredients()[0], full.getIngredients()[1],
                     full.getIngredients()[2], full.getIngredients()[3],
                     full.getIngredients()[4], full.getIngredients()[5],
                     full.getIngredients()[6], full.getIngredients()[7],
                     full.getIngredients()[8], full.getIngredients()[9]
             );
-            meal.setMeasures(
+            mealDetails.setMeasures(
                     full.getMeasures()[0], full.getMeasures()[1],
                     full.getMeasures()[2], full.getMeasures()[3],
                     full.getMeasures()[4], full.getMeasures()[5],
@@ -36,15 +36,15 @@ public class MealDetailsPresenter implements MealDetailsContract.Presenter {
             );
         }
 
-        view.showMealDetails(meal);
-        view.updateFavoriteIcon(meal.isFavorite());
+        view.showMealDetails(mealDetails);
+        view.updateFavoriteIcon(mealDetails.isFavorite());
     }
 
     @Override
-    public void toggleFavorite(Meal meal) {
-        if (view == null || meal == null) return;
-        meal.setFavorite(!meal.isFavorite());
-        view.updateFavoriteIcon(meal.isFavorite());
+    public void toggleFavorite(MealDetails mealDetails) {
+        if (view == null || mealDetails == null) return;
+        mealDetails.setFavorite(!mealDetails.isFavorite());
+        view.updateFavoriteIcon(mealDetails.isFavorite());
     }
 
     @Override

@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <!-- Meal of the Day Header -->
+    <!-- MealDetails of the Day Header -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
             android:textSize="14sp" />
     </LinearLayout>
 
-    <!-- Random Meal Card -->
+    <!-- Random MealDetails Card -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardRandomMeal"
         android:layout_width="match_parent"

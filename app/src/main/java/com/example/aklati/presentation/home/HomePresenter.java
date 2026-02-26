@@ -1,7 +1,7 @@
 package com.example.aklati.presentation.home;
 
 import com.example.aklati.data.local.prefs.SharedPrefsHelper;
-import com.example.aklati.data.models.Meal;
+import com.example.aklati.data.models.MealDetails;
 import com.example.aklati.data.repository.MealRepository;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -24,37 +24,30 @@ public class HomePresenter implements HomeContract.Presenter {
     @Override
     public void getRandomMeal() {
         view.showLoading();
-        disposables.add(repository.getRandomMeal()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(response -> {
-                            view.hideLoading();
-                            if (response.getMeals() != null && !response.getMeals().isEmpty()) {
-                                view.showRandomMeal(response.getMeals().get(0));
-                            } else {
-                                view.showError("No meal found");
-                            }
-                        }, throwable -> {
-                            view.hideLoading();
-                            view.showError(throwable.getMessage());
-                        }
-                ));
+        disposables.add(repository.getRandomMeal().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(response -> {
+            view.hideLoading();
+            if (response.getMeals() != null && !response.getMeals().isEmpty()) {
+                view.showRandomMeal(response.getMeals().get(0));
+            } else {
+                view.showError("No meal found");
+            }
+        }, throwable -> {
+            view.hideLoading();
+            view.showError(throwable.getMessage());
+        }));
 
     }
 
     @Override
     public void getCategories() {
         view.showLoading();
-        disposables.add(repository.getCategories()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(response -> {
-                    view.hideLoading();
-                    view.showCategories(response.getCategories());
-                }, throwable -> {
-                    view.hideLoading();
-                    view.showError(throwable.getMessage());
-                }));
+        disposables.add(repository.getCategories().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(response -> {
+            view.hideLoading();
+            view.showCategories(response.getCategories());
+        }, throwable -> {
+            view.hideLoading();
+            view.showError(throwable.getMessage());
+        }));
     }
 
     @Override
@@ -76,12 +69,12 @@ public class HomePresenter implements HomeContract.Presenter {
     }
 
     @Override
-    public void addToFavorites(Meal meal) {
+    public void addToFavorites(MealDetails meal) {
 
     }
 
     @Override
-    public void removeFromFavorites(Meal meal) {
+    public void removeFromFavorites(MealDetails meal) {
 
     }
 

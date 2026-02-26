@@ -21,7 +21,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.bumptech.glide.Glide;
 import com.example.aklati.R;
-import com.example.aklati.data.models.Meal;
+import com.example.aklati.data.models.MealDetails;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -43,7 +43,7 @@ public class MealDetailsFragment extends Fragment implements MealDetailsContract
     private FloatingActionButton fabFavorite;
 
     private MealDetailsPresenter presenter;
-    private Meal currentMeal;
+    private MealDetails currentMealDetails;
 
     public MealDetailsFragment() {
     }
@@ -60,7 +60,7 @@ public class MealDetailsFragment extends Fragment implements MealDetailsContract
 
         // Get meal from arguments
         if (getArguments() != null) {
-            currentMeal = (Meal) getArguments().getSerializable(ARG_MEAL);
+            currentMealDetails = (MealDetails) getArguments().getSerializable(ARG_MEAL);
         }
 
         // Bind views
@@ -92,26 +92,26 @@ public class MealDetailsFragment extends Fragment implements MealDetailsContract
 
         // Favourite toggle
         fabFavorite.setOnClickListener(v -> {
-            if (presenter != null) presenter.toggleFavorite(currentMeal);
+            if (presenter != null) presenter.toggleFavorite(currentMealDetails);
         });
 
         // Presenter
         presenter = new MealDetailsPresenter(this);
-        presenter.loadMealDetails(currentMeal);
+        presenter.loadMealDetails(currentMealDetails);
     }
 
     // ── MealDetailsContract.View ─────────────────────────────────────────────
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
-    public void showMealDetails(Meal meal) {
-        this.currentMeal = meal;
+    public void showMealDetails(MealDetails mealDetails) {
+        this.currentMealDetails = mealDetails;
 
         // Name
-        tvDetailMealName.setText(meal.getName());
+        tvDetailMealName.setText(mealDetails.getName());
 
         // Area / country
-        String area = meal.getArea();
+        String area = mealDetails.getArea();
         if (area != null && !area.isEmpty()) {
             tvDetailArea.setText(getString(R.string.area_cuisine_format, area));
         } else {
@@ -119,7 +119,7 @@ public class MealDetailsFragment extends Fragment implements MealDetailsContract
         }
 
         // Category chip
-        String category = meal.getCategory();
+        String category = mealDetails.getCategory();
         if (category != null && !category.isEmpty()) {
             chipCategory.setText(category);
         } else {
@@ -127,9 +127,9 @@ public class MealDetailsFragment extends Fragment implements MealDetailsContract
         }
 
         // Hero image
-        if (meal.getImage() != null && !meal.getImage().isEmpty()) {
+        if (mealDetails.getImage() != null && !mealDetails.getImage().isEmpty()) {
             Glide.with(requireContext())
-                    .load(meal.getImage())
+                    .load(mealDetails.getImage())
                     .placeholder(R.drawable.aklati_logo)
                     .centerCrop()
                     .into(ivMealDetailImage);
@@ -138,8 +138,8 @@ public class MealDetailsFragment extends Fragment implements MealDetailsContract
         }
 
         // Ingredients
-        String[] ingredientArr = meal.getIngredients();
-        String[] measureArr = meal.getMeasures();
+        String[] ingredientArr = mealDetails.getIngredients();
+        String[] measureArr = mealDetails.getMeasures();
         List<String> ingredientList = new ArrayList<>();
         List<String> measureList = new ArrayList<>();
         for (int i = 0; i < ingredientArr.length; i++) {
@@ -152,7 +152,7 @@ public class MealDetailsFragment extends Fragment implements MealDetailsContract
         IngredientAdapter.populate(requireContext(), llIngredients, ingredientList, measureList);
 
         // Instructions
-        String instructions = meal.getInstructions();
+        String instructions = mealDetails.getInstructions();
         if (instructions != null && !instructions.isEmpty()) {
             tvInstructions.setText(instructions);
         } else {
@@ -160,7 +160,7 @@ public class MealDetailsFragment extends Fragment implements MealDetailsContract
         }
 
         // YouTube video
-        String ytUrl = meal.getYoutubeUrl();
+        String ytUrl = mealDetails.getYoutubeUrl();
         if (ytUrl != null && !ytUrl.isEmpty()) {
             llVideoSection.setVisibility(View.VISIBLE);
             loadYouTubeVideo(ytUrl);

@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.aklati.R;
 import com.example.aklati.data.models.Meal;
 
@@ -18,6 +19,7 @@ public class MealGridAdapter extends RecyclerView.Adapter<MealGridAdapter.MealVi
 
     private final List<Meal> meals;
     private final OnMealClickListener listener;
+
     public MealGridAdapter(List<Meal> meals, OnMealClickListener listener) {
         this.meals = meals;
         this.listener = listener;
@@ -33,19 +35,16 @@ public class MealGridAdapter extends RecyclerView.Adapter<MealGridAdapter.MealVi
 
     @Override
     public void onBindViewHolder(@NonNull MealViewHolder holder, int position) {
-        Meal meal = meals.get(position);
+        Meal meal = this.meals.get(position);
         holder.tvMealName.setText(meal.getName());
-
-        String area = meal.getArea();
-        if (area != null && !area.isEmpty()) {
-            holder.tvMealArea.setText(area);
-            holder.tvMealArea.setVisibility(View.VISIBLE);
-        } else {
-            holder.tvMealArea.setVisibility(View.GONE);
-        }
-
-        // Use placeholder image (real images come from API later)
-        holder.ivMealImage.setImageResource(R.drawable.aklati_logo);
+        
+        // Load meal image with Glide
+        Glide.with(holder.itemView.getContext())
+                .load(meal.getImage())
+                .placeholder(R.drawable.aklati_logo)
+                .error(R.drawable.aklati_logo)
+                .centerCrop()
+                .into(holder.ivMealImage);
 
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
@@ -63,16 +62,14 @@ public class MealGridAdapter extends RecyclerView.Adapter<MealGridAdapter.MealVi
         void onMealClick(Meal meal);
     }
 
-    static class MealViewHolder extends RecyclerView.ViewHolder {
+    public static class MealViewHolder extends RecyclerView.ViewHolder {
         ImageView ivMealImage;
         TextView tvMealName;
-        TextView tvMealArea;
 
         public MealViewHolder(@NonNull View itemView) {
             super(itemView);
             ivMealImage = itemView.findViewById(R.id.ivMealImage);
             tvMealName = itemView.findViewById(R.id.tvMealName);
-            tvMealArea = itemView.findViewById(R.id.tvMealArea);
         }
     }
 }

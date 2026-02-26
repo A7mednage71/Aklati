@@ -1,6 +1,6 @@
 package com.example.aklati.presentation.favorite;
 
-import com.example.aklati.data.models.Meal;
+import com.example.aklati.data.models.MealDetails;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public class FavoritePresenter implements FavoriteContract.Presenter {
     public void getFavorites() {
         // TODO: implement real DB/repo logic
         if (view != null) {
-            List<Meal> dummyList = Meal.dummyMeals();
+            List<MealDetails> dummyList = MealDetails.dummyMeals();
             if (dummyList.isEmpty()) {
                 view.showEmptyState();
             } else {
@@ -26,7 +26,7 @@ public class FavoritePresenter implements FavoriteContract.Presenter {
     }
 
     @Override
-    public void removeFavorite(Meal meal) {
+    public void removeFavorite(MealDetails mealDetails) {
         // TODO: implement remove from DB/repo logic
     }
 

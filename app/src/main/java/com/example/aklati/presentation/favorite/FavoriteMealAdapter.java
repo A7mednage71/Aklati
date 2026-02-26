@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aklati.R;
-import com.example.aklati.data.models.Meal;
+import com.example.aklati.data.models.MealDetails;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 
@@ -18,11 +18,11 @@ import java.util.List;
 
 public class FavoriteMealAdapter extends RecyclerView.Adapter<FavoriteMealAdapter.ViewHolder> {
 
-    private final List<Meal> meals;
+    private final List<MealDetails> mealDetails;
     private final OnFavoriteActionListener listener;
 
-    public FavoriteMealAdapter(List<Meal> meals, OnFavoriteActionListener listener) {
-        this.meals = meals;
+    public FavoriteMealAdapter(List<MealDetails> mealDetails, OnFavoriteActionListener listener) {
+        this.mealDetails = mealDetails;
         this.listener = listener;
     }
 
@@ -36,34 +36,34 @@ public class FavoriteMealAdapter extends RecyclerView.Adapter<FavoriteMealAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Meal meal = meals.get(position);
-        holder.bind(meal, listener, position);
+        MealDetails mealDetails = this.mealDetails.get(position);
+        holder.bind(mealDetails, listener, position);
     }
 
     @Override
     public int getItemCount() {
-        return meals.size();
+        return mealDetails.size();
     }
 
     public void removeItem(int position) {
-        meals.remove(position);
+        mealDetails.remove(position);
         notifyItemRemoved(position);
-        notifyItemRangeChanged(position, meals.size());
+        notifyItemRangeChanged(position, mealDetails.size());
     }
 
-    public Meal getMealAt(int position) {
-        return meals.get(position);
+    public MealDetails getMealAt(int position) {
+        return mealDetails.get(position);
     }
 
-    public void restoreItem(Meal meal, int position) {
-        meals.add(position, meal);
+    public void restoreItem(MealDetails mealDetails, int position) {
+        this.mealDetails.add(position, mealDetails);
         notifyItemInserted(position);
     }
 
     public interface OnFavoriteActionListener {
-        void onRemoveFavorite(Meal meal, int position);
+        void onRemoveFavorite(MealDetails mealDetails, int position);
 
-        void onMealClick(Meal meal);
+        void onMealClick(MealDetails mealDetails);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -81,21 +81,21 @@ public class FavoriteMealAdapter extends RecyclerView.Adapter<FavoriteMealAdapte
             ibRemoveFavorite = itemView.findViewById(R.id.btnRemoveFavorite);
         }
 
-        void bind(Meal meal, OnFavoriteActionListener listener, int position) {
-            tvMealName.setText(meal.getName() != null ? meal.getName() : "Unknown");
-            tvMealCategory.setText(meal.getCategory() != null ? meal.getCategory() : "");
-            tvMealArea.setText(meal.getArea() != null ? meal.getArea() : "");
+        void bind(MealDetails mealDetails, OnFavoriteActionListener listener, int position) {
+            tvMealName.setText(mealDetails.getName() != null ? mealDetails.getName() : "Unknown");
+            tvMealCategory.setText(mealDetails.getCategory() != null ? mealDetails.getCategory() : "");
+            tvMealArea.setText(mealDetails.getArea() != null ? mealDetails.getArea() : "");
 
             // TODO: load image with Glide/Picasso when implementing network
-            // Glide.with(itemView.getContext()).load(meal.getImage()).into(ivMealImage);
+            // Glide.with(itemView.getContext()).load(mealDetails.getImage()).into(ivMealImage);
             ivMealImage.setImageResource(R.drawable.aklati_logo);
 
             ibRemoveFavorite.setOnClickListener(v -> {
-                if (listener != null) listener.onRemoveFavorite(meal, position);
+                if (listener != null) listener.onRemoveFavorite(mealDetails, position);
             });
 
             itemView.setOnClickListener(v -> {
-                if (listener != null) listener.onMealClick(meal);
+                if (listener != null) listener.onMealClick(mealDetails);
             });
         }
     }
