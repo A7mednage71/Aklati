@@ -24,8 +24,9 @@ import com.example.aklati.data.models.Category;
 import com.example.aklati.data.models.MealDetails;
 import com.example.aklati.data.remote.network.RetrofitClient;
 import com.example.aklati.data.repository.MealRepository;
-import com.example.aklati.presentation.category_meals.CategoryMealsFragment;
 import com.example.aklati.presentation.meal_details.MealDetailsFragment;
+import com.example.aklati.presentation.meal_list.FilterType;
+import com.example.aklati.presentation.meal_list.MealListFragment;
 import com.facebook.shimmer.Shimmer;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.card.MaterialCardView;
@@ -151,8 +152,8 @@ public class homeFragment extends Fragment implements HomeContract.View {
     public void showCategories(List<Category> categories) {
         CategoryAdapter adapter = new CategoryAdapter(categories, category -> {
             Bundle args = new Bundle();
-            args.putString(CategoryMealsFragment.ARG_CATEGORY_NAME, category.getName());
-            args.putString(CategoryMealsFragment.ARG_CATEGORY_IMAGE, category.getImage());
+            args.putString(MealListFragment.ARG_TITLE, category.getName());
+            args.putString(MealListFragment.ARG_IMAGE, category.getImage());
             Navigation.findNavController(requireView())
                     .navigate(R.id.action_home_to_categoryMeals, args);
         });
@@ -162,10 +163,12 @@ public class homeFragment extends Fragment implements HomeContract.View {
     @Override
     public void showAreas(List<Area> areas) {
         AreaAdapter adapter = new AreaAdapter(areas, area -> {
-//            Bundle args = new Bundle();
-//            args.putString(CategoryMealsFragment.ARG_AREA_NAME, area.getStrArea());
-//            Navigation.findNavController(requireView())
-//                    .navigate(R.id.action_home_to_categoryMeals, args);
+            Bundle args = new Bundle();
+            args.putString(MealListFragment.ARG_FILTER_TYPE, FilterType.AREA.getValue());
+            args.putString(MealListFragment.ARG_TITLE, area.getStrArea());
+            args.putString(MealListFragment.ARG_IMAGE, area.getCountryFlag());
+            Navigation.findNavController(requireView())
+                    .navigate(R.id.action_home_to_categoryMeals, args);
         });
         rvAreas.setAdapter(adapter);
     }

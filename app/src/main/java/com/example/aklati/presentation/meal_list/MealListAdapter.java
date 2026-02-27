@@ -1,4 +1,4 @@
-package com.example.aklati.presentation.category_meals;
+package com.example.aklati.presentation.meal_list;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,12 +15,12 @@ import com.example.aklati.data.models.Meal;
 
 import java.util.List;
 
-public class MealGridAdapter extends RecyclerView.Adapter<MealGridAdapter.MealViewHolder> {
+public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.MealViewHolder> {
 
     private final List<Meal> meals;
     private final OnMealClickListener listener;
 
-    public MealGridAdapter(List<Meal> meals, OnMealClickListener listener) {
+    public MealListAdapter(List<Meal> meals, OnMealClickListener listener) {
         this.meals = meals;
         this.listener = listener;
     }
@@ -37,7 +37,7 @@ public class MealGridAdapter extends RecyclerView.Adapter<MealGridAdapter.MealVi
     public void onBindViewHolder(@NonNull MealViewHolder holder, int position) {
         Meal meal = this.meals.get(position);
         holder.tvMealName.setText(meal.getName());
-        
+
         // Load meal image with Glide
         Glide.with(holder.itemView.getContext())
                 .load(meal.getImage())

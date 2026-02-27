@@ -86,7 +86,7 @@
 
     <fragment
         android:id="@+id/categoryMealsFragment"
-        android:name="com.example.aklati.presentation.category_meals.CategoryMealsFragment"
+        android:name="com.example.aklati.presentation.meal_list.MealListFragment"
         android:label="Category Meals"
         tools:layout="@layout/fragment_category_meals">
         <argument

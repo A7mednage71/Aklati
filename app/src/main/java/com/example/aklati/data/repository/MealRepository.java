@@ -31,6 +31,10 @@ public class MealRepository {
         return apiService.getMealsByCategory(category);
     }
 
+    public Single<MealResponse> getMealsByArea(String area) {
+        return apiService.getMealsByArea(area);
+    }
+
     public Single<MealDetailsResponse> getMealById(String mealId) {
         return apiService.getMealById(mealId);
     }

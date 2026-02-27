@@ -25,8 +25,8 @@ import com.example.aklati.R;
 import com.example.aklati.data.models.Meal;
 import com.example.aklati.data.remote.network.RetrofitClient;
 import com.example.aklati.data.repository.MealRepository;
-import com.example.aklati.presentation.category_meals.MealGridAdapter;
 import com.example.aklati.presentation.meal_details.MealDetailsFragment;
+import com.example.aklati.presentation.meal_list.MealListAdapter;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.List;
@@ -169,7 +169,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
         String countText = meals.size() + " result" + (meals.size() == 1 ? "" : "s") + " found";
         tvResultsCount.setText(countText);
 
-        MealGridAdapter adapter = new MealGridAdapter(meals, meal -> {
+        MealListAdapter adapter = new MealListAdapter(meals, meal -> {
             Bundle args = new Bundle();
             args.putString(MealDetailsFragment.ARG_MEAL_ID, meal.getId());
             Navigation.findNavController(requireView())

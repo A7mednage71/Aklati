@@ -1,4 +1,4 @@
-package com.example.aklati.presentation.category_meals;
+package com.example.aklati.presentation.meal_list;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -27,22 +27,23 @@ import com.google.android.material.button.MaterialButton;
 
 import java.util.List;
 
-public class CategoryMealsFragment extends Fragment implements CategoryMealsContract.View {
+public class MealListFragment extends Fragment implements MealsListContract.View {
 
-    public static final String ARG_CATEGORY_NAME = "categoryName";
-    public static final String ARG_CATEGORY_IMAGE = "categoryImage";
+    public static final String ARG_IMAGE = "image";
+    public static final String ARG_TITLE = "title";
+    public static final String ARG_FILTER_TYPE = "filterType"; // "category" or "area"
+
     private RecyclerView rvMealsGrid;
     private ShimmerFrameLayout shimmerLayout;
     private View emptyStateLayout;
     private View layoutError;
-    private Button btnRetry;
     private TextView tvMealsCount;
-    private ImageView ivCategoryHeaderImage;
-    private CategoryMealsPresenter presenter;
-    private String categoryName;
-    private String categoryImage;
+    private MealListPresenter presenter;
+    private String title;
+    private String image;
+    private FilterType filterType;
 
-    public CategoryMealsFragment() {
+    public MealListFragment() {
     }
 
     @Override
@@ -54,15 +55,18 @@ public class CategoryMealsFragment extends Fragment implements CategoryMealsCont
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Get args
+        // Get args and parse FilterType
         if (getArguments() != null) {
-            categoryName = getArguments().getString(ARG_CATEGORY_NAME, "");
-            categoryImage = getArguments().getString(ARG_CATEGORY_IMAGE, "");
+            String typeValue = getArguments().getString(ARG_FILTER_TYPE, FilterType.CATEGORY.getValue());
+            filterType = FilterType.fromString(typeValue);
+            title = getArguments().getString(ARG_TITLE, "");
+            image = getArguments().getString(ARG_IMAGE, "");
         }
 
-        // Validate category name
-        if (categoryName == null || categoryName.trim().isEmpty()) {
-            Toast.makeText(requireContext(), "Invalid category", Toast.LENGTH_SHORT).show();
+
+        // Validate top bar title
+        if (title == null || title.trim().isEmpty()) {
+            Toast.makeText(requireContext(), "Invalid " + filterType.getValue(), Toast.LENGTH_SHORT).show();
             Navigation.findNavController(view).popBackStack();
             return;
         }
@@ -72,14 +76,24 @@ public class CategoryMealsFragment extends Fragment implements CategoryMealsCont
         shimmerLayout = view.findViewById(R.id.shimmerLayout);
         emptyStateLayout = view.findViewById(R.id.emptyStateLayout);
         layoutError = view.findViewById(R.id.layoutError);
-        btnRetry = layoutError.findViewById(R.id.btnRetry);
+        Button btnRetry = layoutError.findViewById(R.id.btnRetry);
 
         TextView tvCategoryTitle = view.findViewById(R.id.tvCategoryTitle);
-        // Set category title
-        tvCategoryTitle.setText(categoryName);
-        ivCategoryHeaderImage = view.findViewById(R.id.ivCategoryHeaderImage);
-        // Load category image with Glide
-        Glide.with(getContext()).load(categoryImage).placeholder(R.drawable.aklati_logo).error(R.drawable.aklati_logo).centerCrop().into(ivCategoryHeaderImage);
+        // Set title
+        tvCategoryTitle.setText(title);
+        ImageView ivCategoryHeaderImage = view.findViewById(R.id.ivCategoryHeaderImage);
+
+        // Load image with Glide
+        if (image != null && !image.isEmpty()) {
+            Glide.with(getContext())
+                    .load(image)
+                    .placeholder(R.drawable.aklati_logo)
+                    .error(R.drawable.aklati_logo)
+                    .centerCrop()
+                    .into(ivCategoryHeaderImage);
+        } else {
+            ivCategoryHeaderImage.setImageResource(R.drawable.aklati_logo);
+        }
 
         tvMealsCount = view.findViewById(R.id.tvMealsCount);
         MaterialButton btnBack = view.findViewById(R.id.btnBack);
@@ -97,14 +111,27 @@ public class CategoryMealsFragment extends Fragment implements CategoryMealsCont
 
         // Initialize presenter and load data
         MealRepository repo = new MealRepository(RetrofitClient.getService());
-        presenter = new CategoryMealsPresenter(this, repo);
+        presenter = new MealListPresenter(this, repo);
 
         // Delay data loading slightly to ensure UI is ready
         view.postDelayed(() -> {
             if (presenter != null) {
-                presenter.getMealsByCategory(categoryName);
+                loadData();
             }
         }, 300);
+    }
+
+    private void loadData() {
+        if (presenter == null) return;
+        switch (filterType) {
+            case AREA:
+                presenter.getMealsByArea(title);
+                break;
+            case CATEGORY:
+            default:
+                presenter.getMealsByCategory(title);
+                break;
+        }
     }
 
     @Override
@@ -137,7 +164,7 @@ public class CategoryMealsFragment extends Fragment implements CategoryMealsCont
         if (tvMealsCount != null) {
             tvMealsCount.setText(countText);
         }
-        MealGridAdapter adapter = new MealGridAdapter(meals, meal -> {
+        MealListAdapter adapter = new MealListAdapter(meals, meal -> {
             if (meal == null) return;
             Bundle args = new Bundle();
             args.putString(MealDetailsFragment.ARG_MEAL_ID, meal.getId());
@@ -173,8 +200,8 @@ public class CategoryMealsFragment extends Fragment implements CategoryMealsCont
     }
 
     private void retryLoadData() {
-        if (presenter != null && categoryName != null) {
-            presenter.getMealsByCategory(categoryName);
+        if (presenter != null) {
+            loadData();
         }
     }
 
