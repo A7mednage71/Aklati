@@ -1,6 +1,7 @@
 package com.example.aklati.presentation.home;
 
 
+import com.example.aklati.data.models.Area;
 import com.example.aklati.data.models.Category;
 import com.example.aklati.data.models.MealDetails;
 
@@ -17,6 +18,8 @@ public interface HomeContract {
 
         void showCategories(List<Category> categories);
 
+        void showAreas(List<Area> areas);
+
         void showUserName(String name);
 
         void navigateToDetails(MealDetails meal);
@@ -30,6 +33,8 @@ public interface HomeContract {
         void getRandomMeal();
 
         void getCategories();
+
+        void getAreas();
 
         void getUserName();
 

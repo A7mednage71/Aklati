@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.aklati.R;
 import com.example.aklati.data.local.prefs.SharedPrefsHelper;
+import com.example.aklati.data.models.Area;
 import com.example.aklati.data.models.Category;
 import com.example.aklati.data.models.MealDetails;
 import com.example.aklati.data.remote.network.RetrofitClient;
@@ -34,6 +35,7 @@ import java.util.List;
 public class homeFragment extends Fragment implements HomeContract.View {
     private HomeContract.Presenter presenter;
     private RecyclerView rvCategories;
+    private RecyclerView rvAreas;
     private EditText etSearch;
     private ImageView ivRandomMeal;
     private TextView tvRandomMealName;
@@ -68,6 +70,7 @@ public class homeFragment extends Fragment implements HomeContract.View {
         super.onViewCreated(view, savedInstanceState);
         tvWelcomeGreeting = view.findViewById(R.id.tvWelcomeGreeting);
         rvCategories = view.findViewById(R.id.rvCategories);
+        rvAreas = view.findViewById(R.id.rvAreas);
         etSearch = view.findViewById(R.id.etSearch);
         ivRandomMeal = view.findViewById(R.id.ivRandomMeal);
         tvRandomMealName = view.findViewById(R.id.tvRandomMealName);
@@ -82,6 +85,10 @@ public class homeFragment extends Fragment implements HomeContract.View {
                 new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         rvCategories.setNestedScrollingEnabled(false);
 
+        rvAreas.setLayoutManager(
+                new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        rvAreas.setNestedScrollingEnabled(false);
+
         etSearch.setOnClickListener(v -> navigateToSearch());
 
         cardRandomMeal.setOnClickListener(v -> {
@@ -92,6 +99,7 @@ public class homeFragment extends Fragment implements HomeContract.View {
             layoutError.setVisibility(View.GONE);
             presenter.getRandomMeal();
             presenter.getCategories();
+            presenter.getAreas();
         });
 
         MealRepository repo = new MealRepository(RetrofitClient.getService());
@@ -102,6 +110,7 @@ public class homeFragment extends Fragment implements HomeContract.View {
                 presenter.getUserName();
                 presenter.getRandomMeal();
                 presenter.getCategories();
+                presenter.getAreas();
             }
         }, 300);
     }
@@ -148,6 +157,17 @@ public class homeFragment extends Fragment implements HomeContract.View {
                     .navigate(R.id.action_home_to_categoryMeals, args);
         });
         rvCategories.setAdapter(adapter);
+    }
+
+    @Override
+    public void showAreas(List<Area> areas) {
+        AreaAdapter adapter = new AreaAdapter(areas, area -> {
+//            Bundle args = new Bundle();
+//            args.putString(CategoryMealsFragment.ARG_AREA_NAME, area.getStrArea());
+//            Navigation.findNavController(requireView())
+//                    .navigate(R.id.action_home_to_categoryMeals, args);
+        });
+        rvAreas.setAdapter(adapter);
     }
 
     @Override

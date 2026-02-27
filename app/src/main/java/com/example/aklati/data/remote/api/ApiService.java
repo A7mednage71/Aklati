@@ -1,5 +1,6 @@
 package com.example.aklati.data.remote.api;
 
+import com.example.aklati.data.remote.responses.AreaResponse;
 import com.example.aklati.data.remote.responses.CategoryResponse;
 import com.example.aklati.data.remote.responses.MealDetailsResponse;
 import com.example.aklati.data.remote.responses.MealResponse;
@@ -23,4 +24,7 @@ public interface ApiService {
 
     @GET("search.php")
     Single<MealResponse> searchMeals(@Query("s") String query);
+
+    @GET("list.php?a=list")
+    Single<AreaResponse> getAreas();
 }

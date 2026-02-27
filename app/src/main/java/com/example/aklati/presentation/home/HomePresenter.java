@@ -51,6 +51,18 @@ public class HomePresenter implements HomeContract.Presenter {
     }
 
     @Override
+    public void getAreas() {
+        view.showLoading();
+        disposables.add(repository.getAreas().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(response -> {
+            view.hideLoading();
+            view.showAreas(response.getAreas());
+        }, throwable -> {
+            view.hideLoading();
+            view.showError(throwable.getMessage());
+        }));
+    }
+
+    @Override
     public void getUserName() {
         try {
             String name = null;

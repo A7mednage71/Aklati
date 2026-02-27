@@ -39,6 +39,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
+                <!-- Areas Section -->
+                <include
+                    android:id="@+id/areasLayout"
+                    layout="@layout/home_area_section"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

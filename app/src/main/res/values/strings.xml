@@ -28,6 +28,7 @@
     <string name="home">Home</string>
     <string name="profile">Profile</string>
     <string name="browse_categories">Browse Categories</string>
+    <string name="explore_by_area">Explore by Area</string>
     <string name="removed_from_favorites">Removed from favorites</string>
     <string name="undo">Undo</string>
     <string name="no_favorites_yet">No Favorites Yet</string>
