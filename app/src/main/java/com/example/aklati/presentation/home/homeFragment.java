@@ -16,7 +16,6 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.aklati.R;
 import com.example.aklati.data.local.prefs.SharedPrefsHelper;
 import com.example.aklati.data.models.Area;
@@ -27,6 +26,7 @@ import com.example.aklati.data.repository.MealRepository;
 import com.example.aklati.presentation.meal_details.MealDetailsFragment;
 import com.example.aklati.presentation.meal_list.FilterType;
 import com.example.aklati.presentation.meal_list.MealListFragment;
+import com.example.aklati.utils.ImageHelper;
 import com.facebook.shimmer.Shimmer;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.card.MaterialCardView;
@@ -141,11 +141,7 @@ public class homeFragment extends Fragment implements HomeContract.View {
     public void showRandomMeal(MealDetails meal) {
         currentRandomMealDetails = meal;
         tvRandomMealName.setText(meal.getName());
-        Glide.with(this)
-                .load(meal.getImage())
-                .placeholder(R.drawable.aklati_logo)
-                .centerCrop()
-                .into(ivRandomMeal);
+        ImageHelper.loadImage(ivRandomMeal, meal.getImage());
     }
 
     @Override

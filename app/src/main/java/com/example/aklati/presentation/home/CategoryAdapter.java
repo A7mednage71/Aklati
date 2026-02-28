@@ -9,9 +9,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.aklati.R;
 import com.example.aklati.data.models.Category;
+import com.example.aklati.utils.ImageHelper;
 
 import java.util.List;
 
@@ -41,13 +41,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
         Category category = categories.get(position);
         holder.tvCategoryName.setText(category.getName());
-        Glide.with(holder.itemView.getContext())
-                .load(category.getImage())
-                .placeholder(R.drawable.aklati_logo)
-                .error(R.drawable.ic_error)
-                .centerCrop()
-                .into(holder.ivCategoryImage);
-
+        ImageHelper.loadImage(holder.ivCategoryImage, category.getImage());
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onCategoryClick(category);

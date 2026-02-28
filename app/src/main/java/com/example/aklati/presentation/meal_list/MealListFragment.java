@@ -16,12 +16,12 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.aklati.R;
 import com.example.aklati.data.models.Meal;
 import com.example.aklati.data.remote.network.RetrofitClient;
 import com.example.aklati.data.repository.MealRepository;
 import com.example.aklati.presentation.meal_details.MealDetailsFragment;
+import com.example.aklati.utils.ImageHelper;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.button.MaterialButton;
 
@@ -85,12 +85,7 @@ public class MealListFragment extends Fragment implements MealsListContract.View
 
         // Load image with Glide
         if (image != null && !image.isEmpty()) {
-            Glide.with(getContext())
-                    .load(image)
-                    .placeholder(R.drawable.aklati_logo)
-                    .error(R.drawable.aklati_logo)
-                    .centerCrop()
-                    .into(ivCategoryHeaderImage);
+            ImageHelper.loadImage(ivCategoryHeaderImage, image);
         } else {
             ivCategoryHeaderImage.setImageResource(R.drawable.aklati_logo);
         }

@@ -28,9 +28,7 @@
                 android:id="@+id/ivMealImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:src="@drawable/aklati_logo"
-                tools:src="@tools:sample/backgrounds/scenic" />
+                android:scaleType="centerCrop" />
 
             <!-- Gradient overlay on image -->
             <View

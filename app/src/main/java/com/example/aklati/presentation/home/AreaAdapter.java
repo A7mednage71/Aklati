@@ -9,9 +9,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.aklati.R;
 import com.example.aklati.data.models.Area;
+import com.example.aklati.utils.ImageHelper;
 
 import java.util.List;
 
@@ -39,12 +39,7 @@ public class AreaAdapter extends RecyclerView.Adapter<AreaAdapter.AreaViewHolder
         // Load country flag using Glide
         String flagUrl = area.getCountryFlag();
         if (!flagUrl.isEmpty()) {
-            Glide.with(holder.itemView.getContext())
-                    .load(flagUrl)
-                    .placeholder(R.drawable.ic_location)
-                    .error(R.drawable.ic_location)
-                    .centerCrop()
-                    .into(holder.ivAreaIcon);
+            ImageHelper.loadImage(holder.ivAreaIcon, flagUrl);
         } else {
             // If no flag available, show location icon
             holder.ivAreaIcon.setImageResource(R.drawable.ic_location);

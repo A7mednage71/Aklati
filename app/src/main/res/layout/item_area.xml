@@ -35,8 +35,7 @@
                 android:id="@+id/ivAreaIcon"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                tools:src="@tools:sample/backgrounds/scenic" />
+                android:scaleType="centerCrop" />
 
         </com.google.android.material.card.MaterialCardView>
 

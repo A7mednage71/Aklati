@@ -8,10 +8,12 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <!-- Ingredient image card -->
     <com.google.android.material.card.MaterialCardView
-        android:layout_width="72dp"
-        android:layout_height="72dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
         app:cardBackgroundColor="#FFF8F0"
         app:cardCornerRadius="20dp"
         app:cardElevation="0dp"
@@ -23,19 +25,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@string/meal_image_desc"
-            android:padding="10dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/aklati_logo"
-            tools:src="@tools:sample/avatars" />
+            android:padding="12dp"
+            android:scaleType="fitCenter"
+            tools:src="@tools:sample/backgrounds/scenic" />
 
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Ingredient name -->
     <TextView
         android:id="@+id/tvIngredientName"
-        android:layout_width="72dp"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="8dp"
         android:ellipsize="end"
         android:fontFamily="@font/poppins_bold"
         android:gravity="center"
@@ -44,10 +44,9 @@
         android:textSize="11sp"
         tools:text="Soy Sauce" />
 
-    <!-- Measure -->
     <TextView
         android:id="@+id/tvIngredientMeasure"
-        android:layout_width="72dp"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
         android:ellipsize="end"
@@ -55,9 +54,7 @@
         android:gravity="center"
         android:maxLines="1"
         android:textColor="#FF5722"
-        android:textSize="11sp"
+        android:textSize="10sp"
         tools:text="3/4 cup" />
 
 </LinearLayout>
-
-

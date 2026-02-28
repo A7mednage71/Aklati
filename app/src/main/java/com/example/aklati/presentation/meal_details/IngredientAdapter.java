@@ -7,8 +7,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.example.aklati.R;
+import com.example.aklati.utils.ImageHelper;
 
 import java.util.List;
 
@@ -37,11 +37,13 @@ public class IngredientAdapter {
             String imageUrl = "https://www.themealdb.com/images/ingredients/" +
                     name.replace(" ", "%20") + "-Small.png";
 
-            Glide.with(context)
-                    .load(imageUrl)
-                    .placeholder(R.drawable.aklati_logo)
-                    .error(R.drawable.aklati_logo)
-                    .into(ivImage);
+            ImageHelper.loadImage(ivImage, imageUrl);
+
+//            Glide.with(context)
+//                    .load(imageUrl)
+//                    .placeholder(R.drawable.aklati_logo)
+//                    .error(R.drawable.aklati_logo)
+//                    .into(ivImage);
 
             container.addView(item);
         }

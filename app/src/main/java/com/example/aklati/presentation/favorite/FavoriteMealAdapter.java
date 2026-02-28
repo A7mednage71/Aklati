@@ -9,9 +9,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.aklati.R;
 import com.example.aklati.data.local.entity.FavoriteMeal;
+import com.example.aklati.utils.ImageHelper;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 
@@ -105,12 +105,7 @@ public class FavoriteMealAdapter extends RecyclerView.Adapter<FavoriteMealAdapte
 
             // Load image with Glide
             if (meal.getMealImage() != null && !meal.getMealImage().isEmpty()) {
-                Glide.with(itemView.getContext())
-                        .load(meal.getMealImage())
-                        .placeholder(R.drawable.aklati_logo)
-                        .error(R.drawable.aklati_logo)
-                        .centerCrop()
-                        .into(ivMealImage);
+                ImageHelper.loadImage(ivMealImage, meal.getMealImage());
             } else {
                 ivMealImage.setImageResource(R.drawable.aklati_logo);
             }

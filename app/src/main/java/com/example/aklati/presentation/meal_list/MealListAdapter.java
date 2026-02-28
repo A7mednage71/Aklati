@@ -9,9 +9,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.aklati.R;
 import com.example.aklati.data.models.Meal;
+import com.example.aklati.utils.ImageHelper;
 
 import java.util.List;
 
@@ -39,12 +39,7 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.MealVi
         holder.tvMealName.setText(meal.getName());
 
         // Load meal image with Glide
-        Glide.with(holder.itemView.getContext())
-                .load(meal.getImage())
-                .placeholder(R.drawable.aklati_logo)
-                .error(R.drawable.aklati_logo)
-                .centerCrop()
-                .into(holder.ivMealImage);
+        ImageHelper.loadImage(holder.ivMealImage, meal.getImage());
 
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {

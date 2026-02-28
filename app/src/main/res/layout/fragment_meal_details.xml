@@ -31,8 +31,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:contentDescription="@string/meal_image_desc"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/aklati_logo" />
+                    android:scaleType="centerCrop" />
 
                 <!-- Dark gradient overlay at bottom of image -->
                 <View

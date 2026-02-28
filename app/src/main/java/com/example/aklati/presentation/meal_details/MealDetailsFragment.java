@@ -26,7 +26,6 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.bumptech.glide.Glide;
 import com.example.aklati.R;
 import com.example.aklati.data.local.db.AppDatabase;
 import com.example.aklati.data.local.prefs.SharedPrefsHelper;
@@ -34,6 +33,7 @@ import com.example.aklati.data.models.MealDetails;
 import com.example.aklati.data.remote.network.RetrofitClient;
 import com.example.aklati.data.repository.FavoriteRepository;
 import com.example.aklati.data.repository.MealRepository;
+import com.example.aklati.utils.ImageHelper;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -210,11 +210,7 @@ public class MealDetailsFragment extends Fragment implements MealDetailsContract
 
         // Hero image
         if (mealDetails.getImage() != null && !mealDetails.getImage().isEmpty()) {
-            Glide.with(requireContext())
-                    .load(mealDetails.getImage())
-                    .placeholder(R.drawable.aklati_logo)
-                    .centerCrop()
-                    .into(ivMealDetailImage);
+            ImageHelper.loadImage(ivMealDetailImage, mealDetails.getImage());
         } else {
             ivMealDetailImage.setImageResource(R.drawable.aklati_logo);
         }
