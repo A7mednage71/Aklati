@@ -8,6 +8,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -41,6 +44,13 @@ public class RegisterFragment extends Fragment implements RegisterContract.View 
         etPassword = view.findViewById(R.id.etPassword);
         etConfirmPassword = view.findViewById(R.id.etConfirmPassword);
         MaterialButton btnRegister = view.findViewById(R.id.btnRegister);
+        View registerRootView = view.findViewById(R.id.registerRootView);
+
+        ViewCompat.setOnApplyWindowInsetsListener(registerRootView, (v, insets) -> {
+            Insets imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime());
+            v.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(), imeInsets.bottom);
+            return insets;
+        });
 
         btnRegister.setOnClickListener(v -> {
             String name = etName.getText() != null ? etName.getText().toString().trim() : "";
