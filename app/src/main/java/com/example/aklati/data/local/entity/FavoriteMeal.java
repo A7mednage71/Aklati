@@ -5,11 +5,6 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
 
-/**
- * Junction table to link Users with their favorite Meals
- * Composite primary key: (userId, mealId)
- * This allows many-to-many relationship - same meal can be favorite for multiple users
- */
 @Entity(
         tableName = "user_favorites",
         primaryKeys = {"userId", "mealId"},

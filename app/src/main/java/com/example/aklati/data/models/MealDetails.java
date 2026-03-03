@@ -108,16 +108,33 @@ public class MealDetails implements Serializable {
         return area;
     }
 
+    public void setArea(String area) {
+        this.area = area;
+    }
+
     public String getId() {
         return id;
+    }
+
+    // Setter methods for creating MealDetails from Meal
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getCategory() {
         return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getInstructions() {
@@ -128,8 +145,10 @@ public class MealDetails implements Serializable {
         return thumbnail;
     }
 
+    public void setImage(String image) {
+        this.thumbnail = image;
+    }
 
-    // Helper method to access raw fields by index for the Mapper
     public String getIngredient(int index) {
         switch (index) {
             case 1:

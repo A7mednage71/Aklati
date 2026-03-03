@@ -17,46 +17,24 @@ import io.reactivex.rxjava3.core.Single;
 @Dao
 public interface FavoriteMealDao {
 
-    /**
-     * Insert a meal to favorites for specific user
-     * If meal already exists for this user, it will be replaced
-     */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     Completable insertFavorite(FavoriteMeal favoriteMeal);
 
-    /**
-     * Delete a meal from favorites
-     */
     @Delete
     Completable deleteFavorite(FavoriteMeal favoriteMeal);
 
-    /**
-     * Get all favorite meals for specific user ordered by added timestamp (newest first)
-     */
     @Query("SELECT * FROM user_favorites WHERE userId = :userId ORDER BY addedTimestamp DESC")
     Flowable<List<FavoriteMeal>> getFavoritesByUser(String userId);
 
-    /**
-     * Check if a meal is favorite for specific user
-     */
     @Query("SELECT EXISTS(SELECT 1 FROM user_favorites WHERE userId = :userId AND mealId = :mealId)")
     Single<Boolean> isFavorite(String userId, String mealId);
 
-    /**
-     * Get a single favorite meal by user ID and meal ID
-     */
     @Query("SELECT * FROM user_favorites WHERE userId = :userId AND mealId = :mealId")
     Single<FavoriteMeal> getFavoriteByUserAndMeal(String userId, String mealId);
 
-    /**
-     * Delete favorite by user ID and meal ID
-     */
     @Query("DELETE FROM user_favorites WHERE userId = :userId AND mealId = :mealId")
     Completable deleteFavoriteByUserAndMeal(String userId, String mealId);
 
-    /**
-     * Get count of all favorites for specific user
-     */
     @Query("SELECT COUNT(*) FROM user_favorites WHERE userId = :userId")
     Single<Integer> getFavoritesCountByUser(String userId);
 }

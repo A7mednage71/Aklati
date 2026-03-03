@@ -19,10 +19,18 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.MealVi
 
     private final List<Meal> meals;
     private final OnMealClickListener listener;
+    private final OnFavoriteClickListener favoriteListener;
+
+    public MealListAdapter(List<Meal> meals, OnMealClickListener listener, OnFavoriteClickListener favoriteListener) {
+        this.meals = meals;
+        this.listener = listener;
+        this.favoriteListener = favoriteListener;
+    }
 
     public MealListAdapter(List<Meal> meals, OnMealClickListener listener) {
         this.meals = meals;
         this.listener = listener;
+        this.favoriteListener = null;
     }
 
     @NonNull
@@ -37,15 +45,24 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.MealVi
     public void onBindViewHolder(@NonNull MealViewHolder holder, int position) {
         Meal meal = this.meals.get(position);
         holder.tvMealName.setText(meal.getName());
-
-        // Load meal image with Glide
         ImageHelper.loadImage(holder.ivMealImage, meal.getImage());
-
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onMealClick(meal);
             }
         });
+
+        // Handle favorite click
+        holder.ivFavorite.setOnClickListener(v -> {
+            if (favoriteListener != null) {
+                favoriteListener.onFavoriteClick(meal, position);
+            }
+        });
+
+        // Check if meal is favorite
+        if (favoriteListener != null) {
+            favoriteListener.checkFavoriteStatus(meal, holder.ivFavorite);
+        }
     }
 
     @Override
@@ -53,17 +70,40 @@ public class MealListAdapter extends RecyclerView.Adapter<MealListAdapter.MealVi
         return meals.size();
     }
 
+    public void updateFavoriteIcon(String mealId, boolean isFavorite, RecyclerView recyclerView) {
+        if (recyclerView == null || meals == null) return;
+
+        for (int i = 0; i < meals.size(); i++) {
+            Meal meal = meals.get(i);
+            if (meal != null && mealId.equals(meal.getId())) {
+                MealViewHolder viewHolder = (MealViewHolder) recyclerView.findViewHolderForAdapterPosition(i);
+                if (viewHolder != null && viewHolder.ivFavorite != null) {
+                    viewHolder.ivFavorite.setSelected(isFavorite);
+                }
+                break;
+            }
+        }
+    }
+
     public interface OnMealClickListener {
         void onMealClick(Meal meal);
     }
 
+    public interface OnFavoriteClickListener {
+        void onFavoriteClick(Meal meal, int position);
+
+        void checkFavoriteStatus(Meal meal, ImageView favoriteIcon);
+    }
+
     public static class MealViewHolder extends RecyclerView.ViewHolder {
         ImageView ivMealImage;
+        ImageView ivFavorite;
         TextView tvMealName;
 
         public MealViewHolder(@NonNull View itemView) {
             super(itemView);
             ivMealImage = itemView.findViewById(R.id.ivMealImage);
+            ivFavorite = itemView.findViewById(R.id.ivFavorite);
             tvMealName = itemView.findViewById(R.id.tvMealName);
         }
     }

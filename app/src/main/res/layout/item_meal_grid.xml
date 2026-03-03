@@ -28,7 +28,23 @@
                 android:id="@+id/ivMealImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:contentDescription="@string/meal_image"
                 android:scaleType="centerCrop" />
+
+            <!-- Favorite Icon -->
+            <ImageView
+                android:id="@+id/ivFavorite"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="top|end"
+                android:layout_margin="8dp"
+                android:background="@drawable/circle_white_background"
+                android:clickable="true"
+                android:contentDescription="@string/add_to_favorites"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:padding="6dp"
+                android:src="@drawable/selector_favorite" />
 
             <!-- Gradient overlay on image -->
             <View

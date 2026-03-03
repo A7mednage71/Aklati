@@ -138,9 +138,13 @@ public class FavoriteFragment extends Fragment implements FavoriteContract.View 
         adapter = new FavoriteMealAdapter(favoriteMeals, new FavoriteMealAdapter.OnFavoriteActionListener() {
             @Override
             public void onRemoveFavorite(FavoriteMeal meal, int position) {
+                FavoriteMeal removedMeal = adapter.getMealAt(position);
                 adapter.removeItem(position);
                 presenter.removeFavorite(meal.getMealId());
-                Snackbar.make(rvFavorites, getString(R.string.removed_from_favorites), Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(rvFavorites, getString(R.string.removed_from_favorites), Snackbar.LENGTH_LONG).setAction(getString(R.string.undo), v -> {
+                    adapter.restoreItem(removedMeal, position);
+                    rvFavorites.scrollToPosition(position);
+                }).show();
             }
 
             @Override

@@ -63,9 +63,6 @@ public class MealDetailsPresenter implements MealDetailsContract.Presenter {
         view.showErrorMessage("Failed to load meal details. Please check your internet connection.");
     }
 
-    /**
-     * Check if the current meal is in favorites
-     */
     private void checkIfFavorite(String mealId) {
         disposables.add(favoriteRepository.isFavorite(mealId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(favorite -> {
             isFavorite = favorite;
@@ -95,9 +92,6 @@ public class MealDetailsPresenter implements MealDetailsContract.Presenter {
         }
     }
 
-    /**
-     * Add meal to favorites
-     */
     private void addFavorite(MealDetails mealDetails) {
         disposables.add(favoriteRepository.addFavorite(mealDetails).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(() -> {
             isFavorite = true;
@@ -114,9 +108,6 @@ public class MealDetailsPresenter implements MealDetailsContract.Presenter {
         }));
     }
 
-    /**
-     * Remove meal from favorites
-     */
     private void removeFavorite(MealDetails mealDetails) {
         disposables.add(favoriteRepository.removeFavoriteById(mealDetails.getId()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(() -> {
             isFavorite = false;

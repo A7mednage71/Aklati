@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,8 +23,11 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aklati.R;
+import com.example.aklati.data.local.db.AppDatabase;
+import com.example.aklati.data.local.prefs.SharedPrefsHelper;
 import com.example.aklati.data.models.Meal;
 import com.example.aklati.data.remote.network.RetrofitClient;
+import com.example.aklati.data.repository.FavoriteRepository;
 import com.example.aklati.data.repository.MealRepository;
 import com.example.aklati.presentation.meal_details.MealDetailsFragment;
 import com.example.aklati.presentation.meal_list.MealListAdapter;
@@ -45,6 +49,7 @@ public class SearchFragment extends Fragment implements SearchContract.View {
     private TextView tvResultsCount;
 
     private SearchPresenter presenter;
+    private MealListAdapter currentAdapter;
 
     public SearchFragment() {
     }
@@ -74,10 +79,18 @@ public class SearchFragment extends Fragment implements SearchContract.View {
         // Setup RecyclerView
         rvSearchResults.setLayoutManager(new GridLayoutManager(getContext(), 2));
         rvSearchResults.setNestedScrollingEnabled(false);
+        rvSearchResults.setHasFixedSize(true);
 
         // Create Repository and Presenter
         MealRepository repository = new MealRepository(RetrofitClient.getService());
-        presenter = new SearchPresenter(this, repository);
+
+        // Initialize FavoriteRepository
+        SharedPrefsHelper prefsHelper = SharedPrefsHelper.getInstance(requireContext());
+        String userId = prefsHelper.getCurrentUserId();
+        AppDatabase database = AppDatabase.getInstance(requireContext());
+        FavoriteRepository favoriteRepository = new FavoriteRepository(database.favoriteMealDao(), userId);
+
+        presenter = new SearchPresenter(this, repository, favoriteRepository);
 
         // Retry button
         btnRetry.setOnClickListener(v -> {
@@ -122,7 +135,6 @@ public class SearchFragment extends Fragment implements SearchContract.View {
         });
     }
 
-    // Hide soft keyboard
     private void hideKeyboard() {
         if (getActivity() != null && etSearch != null) {
             InputMethodManager imm = (InputMethodManager) getActivity()
@@ -131,7 +143,6 @@ public class SearchFragment extends Fragment implements SearchContract.View {
         }
     }
 
-    // Show soft keyboard
     private void showKeyboard() {
         if (getActivity() != null && etSearch != null) {
             InputMethodManager imm = (InputMethodManager) getActivity()
@@ -157,9 +168,10 @@ public class SearchFragment extends Fragment implements SearchContract.View {
         shimmerLayout.setVisibility(View.GONE);
     }
 
-
     @Override
     public void showMeals(List<Meal> meals) {
+        if (rvSearchResults == null || meals == null) return;
+
         rvSearchResults.setVisibility(View.VISIBLE);
         emptyStateLayout.setVisibility(View.GONE);
         initialStateLayout.setVisibility(View.GONE);
@@ -169,12 +181,37 @@ public class SearchFragment extends Fragment implements SearchContract.View {
         String countText = meals.size() + " result" + (meals.size() == 1 ? "" : "s") + " found";
         tvResultsCount.setText(countText);
 
-        MealListAdapter adapter = new MealListAdapter(meals, meal -> {
-            Bundle args = new Bundle();
-            args.putString(MealDetailsFragment.ARG_MEAL_ID, meal.getId());
-            Navigation.findNavController(requireView())
-                    .navigate(R.id.action_search_to_mealDetails, args);
-        });
+        MealListAdapter adapter = new MealListAdapter(meals,
+                // 1. Navigation Click Listener
+                meal -> {
+                    if (meal == null) return;
+                    Bundle args = new Bundle();
+                    args.putString(MealDetailsFragment.ARG_MEAL_ID, meal.getId());
+                    try {
+                        Navigation.findNavController(requireView())
+                                .navigate(R.id.action_search_to_mealDetails, args);
+                    } catch (Exception e) {
+                        Toast.makeText(requireContext(), "Cannot open meal details", Toast.LENGTH_SHORT).show();
+                    }
+                },
+                // 2. Favorite Click Listener (نفس اللوجيك المكرر)
+                new MealListAdapter.OnFavoriteClickListener() {
+                    @Override
+                    public void onFavoriteClick(Meal meal, int position) {
+                        if (presenter != null) {
+                            presenter.onFavoriteClick(meal.getId());
+                        }
+                    }
+
+                    @Override
+                    public void checkFavoriteStatus(Meal meal, ImageView favoriteIcon) {
+                        if (presenter != null) {
+                            presenter.checkFavoriteStatus(meal.getId(), favoriteIcon);
+                        }
+                    }
+                }
+        );
+        currentAdapter = adapter;
         rvSearchResults.setAdapter(adapter);
     }
 
@@ -185,7 +222,6 @@ public class SearchFragment extends Fragment implements SearchContract.View {
         initialStateLayout.setVisibility(View.GONE);
         layoutError.setVisibility(View.GONE);
         tvResultsCount.setVisibility(View.GONE);
-
         tvEmptyQuery.setText(getString(R.string.search_no_results_for, query));
     }
 
@@ -208,9 +244,20 @@ public class SearchFragment extends Fragment implements SearchContract.View {
     }
 
     @Override
+    public void showMessage(String message) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void updateFavoriteIcon(String mealId, boolean isFavorite) {
+        if (currentAdapter != null && rvSearchResults != null) {
+            currentAdapter.updateFavoriteIcon(mealId, isFavorite, rvSearchResults);
+        }
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         if (presenter != null) presenter.detachView();
     }
 }
-
