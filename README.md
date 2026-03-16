@@ -16,6 +16,9 @@
 | Authentication | Home & Discovery | Meal Details |
 |---|---|---|
 
+<img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/bc8ded29-bbb7-4256-93c6-7a5808eb3502" />
+<img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/1ce85104-1c9b-4164-9ec7-caa7ce9fa9bc" />
+
 
 
 ## ✨ Key Features
