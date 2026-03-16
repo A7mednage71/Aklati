@@ -17,9 +17,6 @@
 |---|---|---|
 
 
----<img width="1920" height="1080" alt="Purple Pink Gradient Mobile Application Presentation" src="https://github.com/user-attachments/assets/afe8bfe4-5f2e-4d66-8ce5-1c179eeeaaed" />
-<img width="1920" height="1080" alt="Purple Pink Gradient Mobile Application Presentation (2)" src="https://github.com/user-attachments/assets/01e6923d-d51c-460e-8e0e-4818a03edae1" />
-
 
 ## ✨ Key Features
 
